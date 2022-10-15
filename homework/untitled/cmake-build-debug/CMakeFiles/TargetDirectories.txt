@@ -1,0 +1,3 @@
+G:/code/cryptology/homework/untitled/cmake-build-debug/CMakeFiles/untitled.dir
+G:/code/cryptology/homework/untitled/cmake-build-debug/CMakeFiles/edit_cache.dir
+G:/code/cryptology/homework/untitled/cmake-build-debug/CMakeFiles/rebuild_cache.dir
