@@ -76,10 +76,12 @@ int attackshift(){
             if(message[j]>=65&&message[j]<=90){
                 message[j]-=i;
                 if(message[j]<65){message[j]+=26;}
+                continue;
             }
             if(message[j]>=97&&message[j]<=122){
                 message[j]-=i;
                 if(message[j]<97){message[j]+=26;}
+                continue;
             }
             if(message[j]==32){continue;}
         }
@@ -279,7 +281,7 @@ int attackSingleTableChange(){
 
 int main(){
     //shiftword();
-    //attackshift();
+    attackshift();
     //singleTableChange();
-    attackSingleTableChange();
+    //attackSingleTableChange();
 }
