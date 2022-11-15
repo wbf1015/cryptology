@@ -196,7 +196,7 @@ int attackSingleTableChange(){
     initialftable();
     char *message=new char[1000];
     ifstream infile;
-    infile.open("message1.txt",ios::in);
+    infile.open("message.txt",ios::in);
     if(!infile.is_open()){
         cout<<"读取文件失败"<<endl;
         return -1;
@@ -263,25 +263,85 @@ int attackSingleTableChange(){
         cout <<"  " << frank[i] << "           " << ftable[frank[i] - 97] << "           " << myrank[i] << "           " << (record.find(myrank[i])->second / cn) * 100 << endl;;
     }
     //构造代换表
+    //以后需要手动更改
     map<char, char>stctable;
     for (int i = 0; i < 26; i++) {
         stctable.insert(pair<char, char>(frank[i], myrank[i]));
     }
-    cout << endl;
-    for (auto it : stctable) {
-        cout << it.first << " " << it.second << endl;
-    }
-    cout << endl;
     cout << "根据频率的单表代换结果解密如下：" << endl;
     for (int i = 0; i < n; i++) {
         if (message[i] >= 97 && message[i] <= 122) { cout << stctable[message[i]]; }
         else { cout << message[i]; }
     }
+    cout << "自动处理部分结束，其余部分需要手动替换解密" << endl;
+    cout << "请输入想要设置的代换对，格式为：a b，他表示a的密文将被翻译为b的明文" << endl;
+    while (true) {
+        cout << "请输入想要设置的代换对数目" << endl;
+        int number;
+        cin >> number;
+        for (int i = 1; i <= number; i++) {
+            cout << "请输入第" << i << "组代换" << endl;
+            char a, b;
+            cin >> a >> b;
+            char temp = stctable[a];
+            for (auto it : stctable) {
+                if (it.second == b) {
+                    char c=it.first;
+                    stctable[c] = temp;
+                    break;
+                }
+            }
+            stctable[a] = b;
+        }
+        cout << "代换表：" << endl;
+        cout << "统计字符" << "    " << "统计字符频率" << "    " << "密文字符" << "    " << "密文字符频率" << endl;
+        for (auto it:stctable) {
+            cout << "  " << it.first << "           " << ftable[it.first - 97] << "           " << it.second << "           " << (record.find(it.second)->second / cn) * 100 << endl;;
+        }
+        cout << "解密结果" << endl;
+        cout << "根据频率的单表代换结果解密如下：" << endl;
+        cout << message << endl;
+        for (int i = 0; i < n; i++) {
+            if (message[i] >= 97 && message[i] <= 122) { cout << stctable[message[i]]; }
+            else { cout << message[i]; }
+        }
+        cout << endl;
+    }
 }
 
 int main(){
-    //shiftword();
-    attackshift();
-    //singleTableChange();
-    //attackSingleTableChange();
+    while (true) {
+        cout << "请选择想要进行的密码行为:" << endl;
+        cout << "1代表执行移位密码加密" << endl;
+        cout << "2代表攻击移位密码" << endl;
+        cout << "3代表执行代表代换加密" << endl;
+        cout << "4代表攻击单表代换密码" << endl;
+        cout << "5代表退出" << endl;
+        int i;
+        cin >> i;
+        if (i == 1) {
+            shiftword();
+            continue;
+        }
+        if (i == 2) {
+            attackshift();
+            continue;
+        }
+        if (i == 3) {
+            singleTableChange();
+            continue;
+        }
+        if (i == 4) {
+            attackSingleTableChange();
+            continue;
+        }
+        if (i == 5) {
+            break;
+        }
+        cout << "输入错误，请检查后再次输入" << endl;
+    }
+
+
+
+
 }

@@ -45,5 +45,4 @@ G:\code\cryptology\实验1\mylab1\源.cpp(251): message : 查看对正在编译�
               _Other1=char,
               _Other2=double
           ]
-G:\code\cryptology\实验1\mylab1\源.cpp(280): warning C4715: “attackSingleTableChange”: 不是所有的控件路径都返回值
   mylab1.vcxproj -> G:\code\cryptology\实验1\mylab1\Debug\mylab1.exe
