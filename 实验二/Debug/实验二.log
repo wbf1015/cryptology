@@ -1,0 +1,3 @@
+﻿  源.cpp
+G:\code\cryptology\实验二\源.cpp(125): warning C4715: “loadmessage”: 不是所有的控件路径都返回值
+  实验二.vcxproj -> G:\code\cryptology\实验二\Debug\实验二.exe
