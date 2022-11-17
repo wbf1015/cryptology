@@ -42,21 +42,27 @@ int shiftword(){
 
     //存储密文
     char *secretmessage=new char[1000];
-    
-    for(int i=0;i<length;i++){
+    int record;
+    for(int i=0;message[i]!='\0'; i++) {
+        record = i;
         if((message[i]>=65&&message[i]<=90)){
-            secretmessage[i]=message[i]-n;
-            if(secretmessage[i]<65){secretmessage[i]+=26;}
+            secretmessage[i]=message[i]+n;
+            if(secretmessage[i]>90){secretmessage[i]-=26;}
+            continue;
         }
         if(message[i]>=97&&message[i]<=122){
-            secretmessage[i]=message[i]-n;
-            if(secretmessage[i]<97){secretmessage[i]+=26;}
+            int j = message[i] + n;
+            if (j > 122) { j -= 26; }
+            secretmessage[i] = j;
+            continue;
         }
         if(message[i]==32){
             secretmessage[i]=32;
+            continue;
         }
+        secretmessage[i] = message[i];
     }
-    secretmessage[length + 1] = '\0';
+    secretmessage[record+2] = '\0';
     cout<<"您的密钥是:"<<n<<endl;
     cout<<"您的明文是:"<<message<<endl;
     cout<<"您的密文是:"<<secretmessage<<endl;
@@ -65,6 +71,7 @@ int shiftword(){
 
 //攻击移位密码
 int attackshift(){
+    getchar();//防止跳过geline函数
     char *secretmessage=new char [1000];
     char *message=new char[1000];
     cout<<"请输入想要攻击的密文"<<endl;
@@ -85,12 +92,13 @@ int attackshift(){
             }
             if(message[j]==32){continue;}
         }
-        cout<<"当密钥是"<<26-i<<"时解密的文件为："<<message<<endl;
+        cout<<"当密钥是"<<i<<"时解密的文件为："<<message<<endl;
     }
     return 0;
 }
 
 int singleTableChange(){
+    getchar();//防止略过geline
     map<char, char>table;
     vector<char>already;
     char* message = new char[26];
@@ -314,7 +322,7 @@ int main(){
         cout << "请选择想要进行的密码行为:" << endl;
         cout << "1代表执行移位密码加密" << endl;
         cout << "2代表攻击移位密码" << endl;
-        cout << "3代表执行代表代换加密" << endl;
+        cout << "3代表执行单表代换加密" << endl;
         cout << "4代表攻击单表代换密码" << endl;
         cout << "5代表退出" << endl;
         int i;

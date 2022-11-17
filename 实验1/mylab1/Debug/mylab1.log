@@ -1,29 +1,29 @@
 ﻿  源.cpp
-G:\code\cryptology\实验1\mylab1\源.cpp(154,29): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(155,28): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(156,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(157,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(158,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(159,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(160,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(161,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(162,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(163,23): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(162,29): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(163,28): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(164,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(165,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(166,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(167,23): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(167,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(168,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(169,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(170,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(171,23): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(172,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(173,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(174,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(175,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(176,23): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(175,23): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(176,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(177,24): warning C4305: “=”: 从“double”到“float”截断
 G:\code\cryptology\实验1\mylab1\源.cpp(178,24): warning C4305: “=”: 从“double”到“float”截断
-G:\code\cryptology\实验1\mylab1\源.cpp(179,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(180,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(181,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(182,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(183,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(184,23): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(185,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(186,24): warning C4305: “=”: 从“double”到“float”截断
+G:\code\cryptology\实验1\mylab1\源.cpp(187,24): warning C4305: “=”: 从“double”到“float”截断
 D:\VS019\VC\Tools\MSVC\14.29.30133\include\utility(193,54): warning C4244: “初始化”: 从“_Ty”转换到“_Ty2”，可能丢失数据
           with
           [
@@ -33,13 +33,13 @@ D:\VS019\VC\Tools\MSVC\14.29.30133\include\utility(193,54): warning C4244: “�
           [
               _Ty2=char
           ]
-G:\code\cryptology\实验1\mylab1\源.cpp(251): message : 查看对正在编译的函数 模板 实例化“std::pair<char,char>::pair<char,double,0>(_Other1 &&,_Other2 &&) noexcept”的引用
+G:\code\cryptology\实验1\mylab1\源.cpp(259): message : 查看对正在编译的函数 模板 实例化“std::pair<char,char>::pair<char,double,0>(_Other1 &&,_Other2 &&) noexcept”的引用
           with
           [
               _Other1=char,
               _Other2=double
           ]
-G:\code\cryptology\实验1\mylab1\源.cpp(251): message : 查看对正在编译的函数 模板 实例化“std::pair<char,char>::pair<char,double,0>(_Other1 &&,_Other2 &&) noexcept”的引用
+G:\code\cryptology\实验1\mylab1\源.cpp(259): message : 查看对正在编译的函数 模板 实例化“std::pair<char,char>::pair<char,double,0>(_Other1 &&,_Other2 &&) noexcept”的引用
           with
           [
               _Other1=char,
