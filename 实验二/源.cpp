@@ -5,7 +5,9 @@
 #include<string>
 using namespace std;
 
+char decrypKey[17][49];//解密用的密钥
 char message[65];//用来存储明文分组
+char originRight[33];//原始的，后来要用于给左侧赋值的32位数
 char Left[33];//左侧的32比特
 char Right[33];//右侧的32比特
 char Right48[49];//记录扩展后的右侧48比特
@@ -22,6 +24,15 @@ int IP[] = { 58, 50, 42, 34, 26, 18, 10, 2,
              59, 51, 43, 35, 27, 19, 11, 3,
              61, 53, 45, 37, 29, 21, 13, 5,
              63, 55, 47, 39, 31, 23, 15, 7 };//初始置换IP
+// 尾置换表
+int IP_1[] = { 40, 8, 48, 16, 56, 24, 64, 32,
+              39, 7, 47, 15, 55, 23, 63, 31,
+              38, 6, 46, 14, 54, 22, 62, 30,
+              37, 5, 45, 13, 53, 21, 61, 29,
+              36, 4, 44, 12, 52, 20, 60, 28,
+              35, 3, 43, 11, 51, 19, 59, 27,
+              34, 2, 42, 10, 50, 18, 58, 26,
+              33, 1, 41,  9, 49, 17, 57, 25 };
 int E[] = { 32,  1,  2,  3,  4,  5,
             4,  5,  6,  7,  8,  9,
             8,  9, 10, 11, 12, 13,
@@ -190,7 +201,7 @@ void printcstar48(char* c, int start, int end) {
 int loadmessage() {
     memset(message, 0, 65);
 	string path;
-	cout << "请输入要读取的文件路径" << endl;
+	cout << "请输入要读取的明文文件路径" << endl;
 	cin >> path;
     ifstream infile;
     infile.open(path, ios::in);
@@ -239,7 +250,7 @@ int loadmessage() {
 int loadkey() {
     memset(key, 0, 65);
     string path;
-    cout << "请输入要读取的文件路径" << endl;
+    cout << "请输入要读取的密钥文件路径" << endl;
     cin >> path;
     ifstream infile;
     infile.open(path, ios::in);
@@ -305,10 +316,27 @@ void initialChange() {
         message[i] = temp[i];
     }
 }
+void reverseInitialChange() {
+    for (int i = 1; i <= 64; i++) {
+        if (i <= 32) {
+            message[i] = Left[i];
+        }
+        else {
+            message[i] = Right[i - 32];
+        }
+    }
+    char temp[65];
+    for (int i = 1; i <= 64; i++) {
+        temp[i] = message[i];
+    }
+    for (int i = 1; i < 65; i++) {
+        message[i] = temp[IP_1[i - 1]];
+    }
+}
 //扩展置换E表
 void extendChange() {
-    char temp[49];
-    for (int i = 1; i < 49; i++) {
+    char temp[33];
+    for (int i = 1; i < 33; i++) {
         temp[i] = Right[i];
     }
     for (int i = 1; i < 49; i++) {
@@ -320,6 +348,23 @@ void calXOR() {
     char temp[49];
     for (int i = 1; i < 49; i++) {
         if (Key48[i] == Right48[i]) {
+            temp[i] = '0';
+            continue;
+        }
+        else {
+            temp[i] = '1';
+            continue;
+        }
+    }
+    for (int i = 1; i < 49; i++) {
+        Right48[i] = temp[i];
+    }
+}
+//解密时的异或运算
+void DecryptCalXOR(int n) {
+    char temp[49];
+    for (int i = 1; i < 49; i++) {
+        if (decrypKey[n][i] == Right48[i]) {
             temp[i] = '0';
             continue;
         }
@@ -359,7 +404,7 @@ void shiftKey(int n) {
         temp[i] = LeftKey[i];
     }
     for (int i = 1; i < 29; i++) {
-        if (i + n > 28) {
+        if (i + n <= 28) {
             LeftKey[i] = temp[i + n];
         }
         else {
@@ -371,7 +416,7 @@ void shiftKey(int n) {
         temp[i] = RightKey[i];
     }
     for (int i = 1; i < 29; i++) {
-        if (i + n > 28) {
+        if (i + n <= 28) {
             RightKey[i] = temp[i + n];
         }
         else {
@@ -440,7 +485,7 @@ void SBoxChange() {
     for (int i = 1; i <= 8; i++) {
         char temp[7];
         for (int j = 1; j <= 6; j++) {
-            temp[j] = (Right48[(i - 1) * 8 + j]);
+            temp[j] = Right48[(i - 1) * 6 + j];
         }
         int r = getRow(temp[1], temp[6]);
         int c = getColumn(temp[2], temp[3], temp[4], temp[5]);
@@ -472,35 +517,77 @@ void calXOR2() {
         }
     }
 }
+void setOriginRight() {
+    for (int i = 1; i <= 32; i++) {
+        originRight[i] = Right[i];
+    }
+}
 void changeLR() {
+    for (int i = 1; i < 33; i++) {
+        Left[i] = originRight[i];
+    }
+    
+}
+void finalChangeLR() {
     char temp[33];
     for (int i = 1; i < 33; i++) {
         temp[i] = Left[i];
         Left[i] = Right[i];
         Right[i] = temp[i];
     }
-    
+}
+void getDecryptKey() {
+    for (int i = 1; i <= 16; i++) {
+        shiftKey(shiftBits[i - 1]);//移位
+        getUsedKey();//选择需要的48位
+        for (int j = 1; j <= 48; j++) {
+            decrypKey[16 - i + 1][j] = Key48[j];//置位
+        }
+    }
 }
 
-void round(int r) {
+void EncryptDESround(int r) {
+    setOriginRight();
     extendChange();//扩展置换
+    //printcstar64(Right, 1, 33);
+    //printcstar48(Right48, 1, 49);
     shiftKey(shiftBits[r-1]);//移动密钥
     getUsedKey();//完成密钥置换2
+    //printcstar48(Key48, 1, 49);
+    calXOR();
+    //printcstar48(Right48, 1, 49);
+    SBoxChange();
+    //printcstar64(Right, 1, 33);
+    PChange();
+    calXOR2();
+    changeLR();
 }
-
-
-
-int main() {
+void DecryptDESround(int r) {
+    setOriginRight();
+    extendChange();//扩展置换
+    //printcstar64(Right, 1, 33);
+    //printcstar48(Right48, 1, 49);
+    //shiftKey(shiftBits[r - 1]);//移动密钥
+    //getUsedKey();//完成密钥置换2
+    //printcstar48(Key48, 1, 49);
+    DecryptCalXOR(r);
+    //printcstar48(Right48, 1, 49);
+    SBoxChange();
+    //printcstar64(Right, 1, 33);
+    PChange();
+    calXOR2();
+    changeLR();
+}
+void encryptMessage() {
     loadmessage();//加载数据
     cout << "输入的明文为：" << endl;
-    printcstar64(message,1,65);//打印数据
+    printcstar64(message, 1, 65);//打印数据
 
     loadkey();//载入密钥
     cout << "您输入的密钥为：" << endl;
     printcstar64(key, 1, 65);//打印输入的密钥
 
-    //产生真的密钥
-    getRealKey();
+    getRealKey();//产生真的密钥
     cout << "真正使用的56位密钥是" << endl;
     printcstar64(Key, 1, 57);//打印真正的密钥
 
@@ -512,5 +599,47 @@ int main() {
     setleft(); setright();//填充左右部分明文
     setLeftKey(); setRightKey();//填充左右部分密文
 
-    round(1);//轮换机制
+    for (int i = 1; i <= 16; i++) {
+        EncryptDESround(i);
+    }
+    finalChangeLR();
+    reverseInitialChange();
+    cout << "最终结果为" << endl;
+    printcstar64(message, 1, 65);//打印数据
+}
+void decryptMessage() {
+    loadmessage();//加载数据
+    cout << "输入的密文为：" << endl;
+    printcstar64(message, 1, 65);//打印数据
+
+    loadkey();//载入密钥
+    cout << "您输入的密钥为：" << endl;
+    printcstar64(key, 1, 65);//打印输入的密钥
+
+    getRealKey();//产生真的密钥
+    cout << "真正使用的56位密钥是" << endl;
+    printcstar64(Key, 1, 57);//打印真正的密钥
+
+    initialChange();//初始置换
+    cout << "初始置换后得到的明文为" << endl;
+    printcstar64(message, 1, 65);//打印数据
+
+    //现在进入这里就默认message中已经填充了64位的数据，Key中填好了56位数据
+    setleft(); setright();//填充左右部分明文
+    setLeftKey(); setRightKey();//填充左右部分密文
+
+    //但是在这里需要考虑的一点是 需要使用和初始置换相反的密钥
+    getDecryptKey();
+    for (int i = 1; i <= 16; i++) {
+        DecryptDESround(i);
+    }
+    finalChangeLR();
+    reverseInitialChange();
+    cout << "最终结果为" << endl;
+    printcstar64(message, 1, 65);//打印数据
+}
+
+
+int main() {
+    decryptMessage();
 }
