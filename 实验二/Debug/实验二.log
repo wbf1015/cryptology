@@ -1,7 +1,7 @@
 ﻿  源.cpp
-G:\code\cryptology\实验二\源.cpp(298): warning C4715: “loadkey”: 不是所有的控件路径都返回值
 G:\code\cryptology\实验二\源.cpp(249): warning C4715: “loadmessage”: 不是所有的控件路径都返回值
+G:\code\cryptology\实验二\源.cpp(298): warning C4715: “loadkey”: 不是所有的控件路径都返回值
 G:\code\cryptology\实验二\源.cpp(447): warning C4715: “getRow”: 不是所有的控件路径都返回值
-G:\code\cryptology\实验二\源.cpp(483): warning C4715: “int2string”: 不是所有的控件路径都返回值
 G:\code\cryptology\实验二\源.cpp(465): warning C4715: “getColumn”: 不是所有的控件路径都返回值
+G:\code\cryptology\实验二\源.cpp(483): warning C4715: “int2string”: 不是所有的控件路径都返回值
   实验二.vcxproj -> G:\code\cryptology\实验二\Debug\实验二.exe

@@ -584,16 +584,16 @@ void encryptMessage() {
     printcstar64(message, 1, 65);//打印数据
 
     loadkey();//载入密钥
-    cout << "您输入的密钥为：" << endl;
-    printcstar64(key, 1, 65);//打印输入的密钥
+    //cout << "您输入的密钥为：" << endl;
+    //printcstar64(key, 1, 65);//打印输入的密钥
 
     getRealKey();//产生真的密钥
     cout << "真正使用的56位密钥是" << endl;
     printcstar64(Key, 1, 57);//打印真正的密钥
 
     initialChange();//初始置换
-    cout << "初始置换后得到的明文为" << endl;
-    printcstar64(message, 1, 65);//打印数据
+    //cout << "初始置换后得到的明文为" << endl;
+    //printcstar64(message, 1, 65);//打印数据
 
     //现在进入这里就默认message中已经填充了64位的数据，Key中填好了56位数据
     setleft(); setright();//填充左右部分明文
@@ -613,16 +613,16 @@ void decryptMessage() {
     printcstar64(message, 1, 65);//打印数据
 
     loadkey();//载入密钥
-    cout << "您输入的密钥为：" << endl;
-    printcstar64(key, 1, 65);//打印输入的密钥
+    //cout << "您输入的密钥为：" << endl;
+    //printcstar64(key, 1, 65);//打印输入的密钥
 
     getRealKey();//产生真的密钥
     cout << "真正使用的56位密钥是" << endl;
     printcstar64(Key, 1, 57);//打印真正的密钥
 
     initialChange();//初始置换
-    cout << "初始置换后得到的明文为" << endl;
-    printcstar64(message, 1, 65);//打印数据
+    //cout << "初始置换后得到的明文为" << endl;
+    //printcstar64(message, 1, 65);//打印数据
 
     //现在进入这里就默认message中已经填充了64位的数据，Key中填好了56位数据
     setleft(); setright();//填充左右部分明文
@@ -641,5 +641,18 @@ void decryptMessage() {
 
 
 int main() {
-    decryptMessage();
+    while (true) {
+        cout << "请输入您想要进行的操作，1代表加密，2代表解密" << endl;
+        int choose;
+        cin >> choose;
+        if (choose == 1) {
+            encryptMessage();
+            continue;
+        }
+        if (choose == 2) {
+            decryptMessage();
+            continue;
+        }
+        cout << "输入错误" << endl;
+    }
 }
