@@ -3,7 +3,65 @@
 #include<vector>
 #include<string>
 using namespace std;
+int textSize;
+int keySize;
+char* text;
+char* key;
+char* out;
 string mx = "100011011";
+class TestData1 {
+public:
+	int textSize = 128;
+	int keySize = 128;
+	string text = "0001, 0001, 01a1, 98af, da78, 1734, 8615, 3566";
+	string key = "0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594";
+	string out = "6cdd, 596b, 8f56, 42cb, d23b, 4798, 1a65, 422a";
+}td1;
+class TestData2 {
+public:
+	int textSize = 128;
+	int keySize = 128;
+	string text = "3243, f6a8, 885a, 308d, 3131, 98a2, e037, 0734";
+	string key = "2b7e, 1516, 28ae, d2a6, abf7, 1588, 09cf, 4f3c";
+	string out = "3925, 841d, 02dc, 09fb, dc11, 8597, 196a, 0b32";
+}td2;
+char matrix1[9][9]{
+	{},
+	{'0','1','0','0','0','1','1','1','1'},
+	{'0','1','1','0','0','0','1','1','1'},
+	{'0','1','1','1','0','0','0','1','1'},
+	{'0','1','1','1','1','0','0','0','1'},
+	{'0','1','1','1','1','1','0','0','0'},
+	{'0','0','1','1','1','1','1','0','0'},
+	{'0','0','0','1','1','1','1','1','0'},
+	{'0','0','0','0','1','1','1','1','1'},
+};
+char matrix2[9]{'0','1','1','0','0','0','1','1','0'};
+//打印char*
+void printCStar(char* c, int start, int end) {
+	for (int i = start; i < end; i++) {
+		cout << c[i];
+	}cout << endl;
+}
+//16进制转换为2进制
+string Hex2Binary(char c) {
+	if (c == '0') { return "0000"; }
+	if (c == '1') { return "0001"; }
+	if (c == '2') { return "0010"; }
+	if (c == '3') { return "0011"; }
+	if (c == '4') { return "0100"; }
+	if (c == '5') { return "0101"; }
+	if (c == '6') { return "0110"; }
+	if (c == '7') { return "0111"; }
+	if (c == '8') { return "1000"; }
+	if (c == '9') { return "1001"; }
+	if (c == 'a') { return "1010"; }
+	if (c == 'b') { return "1011"; }
+	if (c == 'c') { return "1100"; }
+	if (c == 'd') { return "1101"; }
+	if (c == 'e') { return "1110"; }
+	if (c == 'f') { return "1111"; }
+}
 //二进制自增
 string StringInc(string a) {
 	char jw = '0';
@@ -144,6 +202,7 @@ string mulGF(string a, string b) {
 	return temp;
 }
 string reverseGF(string a) {
+	if (a == "00000000") { return "00000000"; }//0映射到自己
 	string s = "00000000";
 	for (int i = 1; i <= 256; i++) {;
 		if (mulGF(a, s) == "00000001") {
@@ -155,11 +214,71 @@ string reverseGF(string a) {
 	}
 	return s;
 }
-
-int main() {
+//需要用测试用例2直接把TestData1改成TestData2就行
+void gettext(TestData1 td) {
+	textSize = td.textSize;
+	int textlength = td.textSize;
+	text = new char[textlength+1];
+	string s = td.text;
+	int count = 1;
+	for (int i = 0; i < s.length(); i++) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+			string t = Hex2Binary(s[i]);
+			for (int j = 0; j < 4; j++) {
+				text[count++] = t[j];
+			}
+		}
+	}
+}
+void getkey(TestData1 td) {
+	keySize = td.keySize;
+	int keylength = td.keySize;
+	key = new char[keylength + 1];
+	string s = td.key;
+	int count = 1;
+	for (int i = 0; i < s.length(); i++) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+			string t = Hex2Binary(s[i]);
+			for (int j = 0; j < 4; j++) {
+				key[count++] = t[j];
+			}
+		}
+	}
+}
+string ByteSub(string s) {
+	string t = reverseGF(s);//得到对应的乘法逆元
+	string r1 = "00000000";
+	for (int i = 1; i <= 8; i++) {
+		//每一个外层循环算出一个比特
+		char tc='0';
+		for (int j = 1; j <= 8; j++) {
+			char tcc;
+			if (matrix1[i][j] == '0' || t[j - 1] == '0') { tcc = '0'; }
+			else { tcc = '1'; }
+			if (tc == tcc) { tc = '0'; }
+			else { tc = '1'; }
+		}
+		r1[i - 1] = tc;
+	}
+	for (int i = 1; i <= 8; i++) {
+		if (r1[i - 1] == matrix2[i]) { r1[i - 1] = '0'; }
+		else { r1[i - 1] = '1'; }
+	}
+	return r1;
+}
+void test() {
 	string s1 = "00011011";
 	string s2 = "00101101";
 	//cout << mulGF(s1, s2)<<endl;
 	string s3 = "01010111";
-	cout << reverseGF(s3);
+	//cout << reverseGF(s3);
+	//gettext(td1);
+	//printCStar(text, 1, 129);
+	//getkey(td1);
+	//printCStar(key, 1, 129);
+	cout << ByteSub("11000001");
+}
+
+int main() {
+	test();
 }
