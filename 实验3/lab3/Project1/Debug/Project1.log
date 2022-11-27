@@ -1,0 +1,6 @@
+﻿  源.cpp
+G:\code\cryptology\实验3\lab3\Project1\源.cpp(38,29): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+G:\code\cryptology\实验3\lab3\Project1\源.cpp(75,20): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\lab3\Project1\源.cpp(76,9): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\lab3\Project1\源.cpp(48): warning C4715: “CharAddb”: 不是所有的控件路径都返回值
+  Project1.vcxproj -> G:\code\cryptology\实验3\lab3\Project1\Debug\Project1.exe
