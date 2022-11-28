@@ -3,11 +3,13 @@
 #include<vector>
 #include<string>
 using namespace std;
-int textSize;
-int keySize;
-char* text;
-char* key;
-char* out;
+int textSize;//明文长度
+int keySize;//密钥长度
+char* text;//明文内容
+char* key;//密钥内容
+char* out;//结果
+int Myround;//迭代的轮数
+int shift[4]{ 0 };//移位时的位数
 string mx = "100011011";
 class TestData1 {
 public:
@@ -37,6 +39,30 @@ char matrix1[9][9]{
 	{'0','0','0','0','1','1','1','1','1'},
 };
 char matrix2[9]{'0','1','1','0','0','0','1','1','0'};
+string matrix3[5][5]{
+	{"","","","",""},
+	{"","00000010","00000011","00000001","00000001"},
+	{"","00000001","00000010","00000011","00000001"},
+	{"","00000001","00000001","00000010","00000011"},
+	{"","00000011","00000001","00000001","00000010"},
+};
+//根据明文长度以及密文长度设置迭代轮数以及位移量
+void SetValue(){
+	//先设置迭代轮数
+	if (textSize == 128 && keySize == 128) { Myround = 10; }
+	if (textSize == 192 && keySize == 128) { Myround = 12; }
+	if (textSize == 256 && keySize == 128) { Myround = 14; }
+	if (textSize == 128 && keySize == 192) { Myround = 12; }
+	if (textSize == 192 && keySize == 192) { Myround = 12; }
+	if (textSize == 256 && keySize == 192) { Myround = 12; }
+	if (textSize == 128 && keySize == 256) { Myround = 14; }
+	if (textSize == 192 && keySize == 256) { Myround = 14; }
+	if (textSize == 256 && keySize == 256) { Myround = 14; }
+	//再设置引动的位移量
+	if (textSize == 128) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
+	if (textSize == 192) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
+	if (textSize == 256) { shift[1] = 1; shift[2] = 3; shift[3] = 4; }
+}
 //打印char*
 void printCStar(char* c, int start, int end) {
 	for (int i = start; i < end; i++) {
@@ -104,7 +130,15 @@ char CharAddb(char a, char b) {
 	if (a == '1' && b == '0') { return '1'; }
 	if (a == '1' && b == '1') { return '0'; }
 }
-//做伽罗瓦域上的加法
+//没有进位的加法
+string StringAddb2(string a, string b) {
+	string r = "00000000";
+	for (int i = 0; i < 8; i++) {
+		r[i] = CharAddb(a[i], b[i]);
+	}
+	return r;
+}
+//做伽罗瓦域上的加法(有加法)
 string StringAddb(string a, string b) {
 	int la = a.length();//拿到a的长度
 	int lb = b.length();//拿到b的长度
@@ -219,6 +253,7 @@ void gettext(TestData1 td) {
 	textSize = td.textSize;
 	int textlength = td.textSize;
 	text = new char[textlength+1];
+	out = new char[textlength + 1];
 	string s = td.text;
 	int count = 1;
 	for (int i = 0; i < s.length(); i++) {
@@ -266,6 +301,76 @@ string ByteSub(string s) {
 	}
 	return r1;
 }
+//行移位
+void shiftRow() {
+	//构建矩阵形式的存储方式
+	string store[5][9];
+	for (int i = 1; i <= textSize / 32; i++) {//遍历列
+		for (int j = 1; j <= 4; j++) {//遍历行
+			string temp = "";
+			for (int k = 1; k <= 8; k++) {
+				temp.push_back(text[(i - 1) * 32 + (j - 1) * 8] + k);
+			}
+			store[j][i] = temp;
+		}
+	}
+	//对第2-4行进行行移位
+	for (int i = 2; i <= 4; i++) {
+		int cross = shift[i - 1];//位移的位数
+		for (int j = 1; j <= textSize / 32; j++) {
+			vector<string>vs;//把这一列的所有字符串都先保存
+			vs.push_back("");//占住零位
+			for (int k = 1; k <= textSize / 32; k++) {
+				vs.push_back(store[i][k]);
+			}
+			for (int k = 1; k <= textSize / 32; k++) {//移位
+				if (k + cross <= textSize / 32) {
+					store[i][k] = vs[k + cross];
+				}
+				else {
+					store[i][k] = vs[k + cross-textSize/32];
+				}
+			}
+		}
+	}
+}
+//列混合
+void MixColumn(int col){
+	vector<string>vs;
+	vector<string>rs;
+	//取出text文件第col列的对应的4个字节
+	for (int i = 1; i <= 4; i++) {
+		string temp;
+		for (int j = 1; j <= 8; j++) {
+			temp.push_back(text[(col - 1) * 32 + (i - 1) * 8 + j]);
+		}
+		vs.push_back(temp);
+	}
+	//循环四次算出列混合后的四个字节
+	for (int i = 1; i <= 4; i++) {
+		for (int j = 1; j <= 4; j++) {
+			vs[j-1]=(mulGF(matrix3[i][j], vs[j - 1]));//乘完之后的结果保存在原来的位置
+		}
+		string temp = "00000000";
+		for (int k = 1; k <= 4; k++) {			
+			temp = StringAddb2(temp, vs[k-1]);//对vs中的内容做累加
+		}
+		rs.push_back(temp);
+	}
+	//把结果填回去
+	for (int i = 1; i <= 4; i++) {
+		for (int j = 1; j <= 8; j++) {
+			text[(col - 1) * 32 + (i - 1) * 8 + j] = rs[i - 1][j - 1];
+		}
+	}
+}
+//密钥加
+void AddRoundKey(char* c) {
+	for (int i = 1; i <= textSize; i++) {
+		if (text[i] == c[i]) { text[i] = '0'; }
+		else { text[i] = '1'; }
+	}
+}
 void test() {
 	string s1 = "00011011";
 	string s2 = "00101101";
@@ -280,5 +385,5 @@ void test() {
 }
 
 int main() {
-	test();
+	//test();
 }
