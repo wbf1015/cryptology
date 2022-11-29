@@ -46,6 +46,18 @@ string matrix3[5][5]{
 	{"","00000001","00000001","00000010","00000011"},
 	{"","00000011","00000001","00000001","00000010"},
 };
+class KeyStore {//这个就是一列
+public:
+	string l1;
+	string l2;
+	string l3;
+	string l4;
+	KeyStore() { l1 = ""; l2 = ""; l3 = ""; l4 = ""; }
+	KeyStore(string s1, string s2, string s3, string s4) {
+		l1 = s1; l2 = s2; l3 = s3; l4 = s4;
+	}
+};
+vector<KeyStore>vks;
 //根据明文长度以及密文长度设置迭代轮数以及位移量
 void SetValue(){
 	//先设置迭代轮数
@@ -124,6 +136,7 @@ int String2Intb(string s) {
 	}
 	return r;
 }
+//对应位异或
 char CharAddb(char a, char b) {
 	if (a == '0' && b == '0') { return '0'; }
 	if (a == '0' && b == '1') { return '1'; }
@@ -369,6 +382,65 @@ void AddRoundKey(char* c) {
 	for (int i = 1; i <= textSize; i++) {
 		if (text[i] == c[i]) { text[i] = '0'; }
 		else { text[i] = '1'; }
+	}
+}
+//密钥产生中RotByte的使用
+void RotByte(KeyStore& ks) {
+	string temp = ks.l1;
+	ks.l1 = ks.l2;
+	ks.l2 = ks.l3;
+	ks.l3 = ks.l4;
+	ks.l4 = temp;
+}
+string GenerateRC(int i) {
+	string temp = "00000000";
+	if (i <= 8) {
+		temp[i - 1] = '1';
+		return temp;
+	}
+	else {
+		for(int j=i-8;j>0;j--){
+			temp.push_back('0');
+		}
+		temp[0] = '1';
+		temp = StringModb(temp);
+		return temp;
+	}
+}
+//密钥扩展
+void KeyExpansion(){
+	//把元密钥放进去
+	for (int i = 0; i < keySize / 32; i++) {
+		vector<string>tvs;
+		for (int j = 1; j <= 4; j++) {
+			string temp = "";
+			for (int k = 1; k <= 8; k++) {
+				temp.push_back(key[(i) * 32 + (j - 1) * 8 + k]);
+			}
+			tvs.push_back(temp);
+		}
+		KeyStore ks(tvs[0], tvs[1], tvs[2], tvs[3]);
+		vks.push_back(ks);
+	}
+	//还要弄这么多列出来
+	for (int i = keySize / 32; i <= (textSize / 32) * (Myround + 1); i++) {
+		KeyStore temp = vks[i - 1];
+		if (i % (keySize / 32) == 0) {
+			RotByte(temp);
+			temp.l1 = ByteSub(temp.l1);
+			temp.l2 = ByteSub(temp.l2);
+			temp.l3 = ByteSub(temp.l3);
+			temp.l4 = ByteSub(temp.l4);
+			string  s = GenerateRC(i % (keySize / 32));
+			temp.l1 = StringAddb2(temp.l1, s);
+		}//更新temp
+		KeyStore t = vks[i - keySize / 32];//取出前面的一个周期的对应位置的来
+		string s1 = StringAddb2(temp.l1, t.l1);
+		string s2 = StringAddb2(temp.l2, t.l2);
+		string s3 = StringAddb2(temp.l3, t.l3);
+		string s4 = StringAddb2(temp.l4, t.l4);
+		KeyStore rs(s1, s2, s3, s4);
+		vks.push_back(rs);
 	}
 }
 void test() {
