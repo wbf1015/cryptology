@@ -2,6 +2,7 @@
 #include<cmath>
 #include<vector>
 #include<string>
+#include<algorithm>
 using namespace std;
 int textSize;//明文长度
 int keySize;//密钥长度
@@ -18,15 +19,16 @@ public:
 	string text = "0001, 0001, 01a1, 98af, da78, 1734, 8615, 3566";
 	string key = "0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594";
 	string out = "6cdd, 596b, 8f56, 42cb, d23b, 4798, 1a65, 422a";
+	TestData1(int ts, int ks, string text, string key, string out) {
+		this->textSize = ts;
+		this->keySize = ks;
+		this->text = text;
+		this->key = key;
+		this->out = out;
+	}
+	TestData1() {};
 }td1;
-class TestData2 {
-public:
-	int textSize = 128;
-	int keySize = 128;
-	string text = "3243, f6a8, 885a, 308d, 3131, 98a2, e037, 0734";
-	string key = "2b7e, 1516, 28ae, d2a6, abf7, 1588, 09cf, 4f3c";
-	string out = "3925, 841d, 02dc, 09fb, dc11, 8597, 196a, 0b32";
-}td2;
+TestData1 td2(128, 128, "3243, f6a8, 885a, 308d, 3131, 98a2, e037, 0734", "2b7e, 1516, 28ae, d2a6, abf7, 1588, 09cf, 4f3c", "3925, 841d, 02dc, 09fb, dc11, 8597, 196a, 0b32");
 char matrix1[9][9]{
 	{},
 	{'0','1','0','0','0','1','1','1','1'},
@@ -38,7 +40,7 @@ char matrix1[9][9]{
 	{'0','0','0','1','1','1','1','1','0'},
 	{'0','0','0','0','1','1','1','1','1'},
 };
-char matrix2[9]{'0','1','1','0','0','0','1','1','0'};
+char matrix2[9]{ '0','1','1','0','0','0','1','1','0' };
 string matrix3[5][5]{
 	{"","","","",""},
 	{"","00000010","00000011","00000001","00000001"},
@@ -59,7 +61,7 @@ public:
 };
 vector<KeyStore>vks;
 //根据明文长度以及密文长度设置迭代轮数以及位移量
-void SetValue(){
+void SetValue() {
 	//先设置迭代轮数
 	if (textSize == 128 && keySize == 128) { Myround = 10; }
 	if (textSize == 192 && keySize == 128) { Myround = 12; }
@@ -70,7 +72,7 @@ void SetValue(){
 	if (textSize == 128 && keySize == 256) { Myround = 14; }
 	if (textSize == 192 && keySize == 256) { Myround = 14; }
 	if (textSize == 256 && keySize == 256) { Myround = 14; }
-	//再设置引动的位移量
+	//再设置移动的位移量
 	if (textSize == 128) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
 	if (textSize == 192) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
 	if (textSize == 256) { shift[1] = 1; shift[2] = 3; shift[3] = 4; }
@@ -79,6 +81,7 @@ void SetValue(){
 void printCStar(char* c, int start, int end) {
 	for (int i = start; i < end; i++) {
 		cout << c[i];
+		if (i % 8 == 0) { cout << endl; }
 	}cout << endl;
 }
 //16进制转换为2进制
@@ -111,7 +114,7 @@ string StringInc(string a) {
 			continue;
 		}
 		else {
-			if (a[i] == '0' && jw == '0') { a[i] = '0'; jw = '0';}
+			if (a[i] == '0' && jw == '0') { a[i] = '0'; jw = '0'; }
 			if (a[i] == '0' && jw == '1') { a[i] = '1'; jw = '0'; }
 			if (a[i] == '1' && jw == '0') { a[i] = '1'; jw = '0'; }
 			if (a[i] == '1' && jw == '1') { a[i] = '0'; jw = '1'; }
@@ -177,16 +180,16 @@ string StringAddb(string a, string b) {
 		}
 		l = lb;
 	}
-	for (int i = 0; i <= ls.size()-1; i++) {
+	for (int i = 0; i <= ls.size() - 1; i++) {
 		if (i <= ss.size() - 1) {
 			if (ls[i] == ss[i]) { rs.push_back('0'); }
 			else { rs.push_back('1'); }
 		}
 		else {
 			rs.push_back(ls[i]);
-			}
+		}
 	}
-	string s="";
+	string s = "";
 	int lr = rs.size();
 	for (int i = lr - 1; i >= 0; i--) {
 		string temp(1, rs[i]);
@@ -206,7 +209,7 @@ string StringModb(string a) {
 		}
 	}
 	string rs = "";
-	for (int i = la - 1 - 7; i <= la-1; i++) {
+	for (int i = la - 1 - 7; i <= la - 1; i++) {
 		string t(1, temp[i]);
 		rs.append(t);
 	}
@@ -219,8 +222,8 @@ string mulGF(string a, string b) {
 	}
 	string temp = a;
 	int lb = b.length();
-	string front="";
-	string back="";
+	string front = "";
+	string back = "";
 	for (int i = lb - 1; i >= 0; i--) {
 		if (b[i] == '1') {
 			if (front == "") {
@@ -251,7 +254,8 @@ string mulGF(string a, string b) {
 string reverseGF(string a) {
 	if (a == "00000000") { return "00000000"; }//0映射到自己
 	string s = "00000000";
-	for (int i = 1; i <= 256; i++) {;
+	for (int i = 1; i <= 256; i++) {
+		;
 		if (mulGF(a, s) == "00000001") {
 			return s;
 		}
@@ -265,7 +269,7 @@ string reverseGF(string a) {
 void gettext(TestData1 td) {
 	textSize = td.textSize;
 	int textlength = td.textSize;
-	text = new char[textlength+1];
+	text = new char[textlength + 1];
 	out = new char[textlength + 1];
 	string s = td.text;
 	int count = 1;
@@ -293,15 +297,16 @@ void getkey(TestData1 td) {
 		}
 	}
 }
+//字节替换
 string ByteSub(string s) {
 	string t = reverseGF(s);//得到对应的乘法逆元
 	string r1 = "00000000";
 	for (int i = 1; i <= 8; i++) {
 		//每一个外层循环算出一个比特
-		char tc='0';
+		char tc = '0';
 		for (int j = 1; j <= 8; j++) {
 			char tcc;
-			if (matrix1[i][j] == '0' || t[j - 1] == '0') { tcc = '0'; }
+			if (matrix1[i][j] == '0' || t[7 - (j - 1)] == '0') { tcc = '0'; }//这里按照网上的改了一下，我也不知道为什么要这么改
 			else { tcc = '1'; }
 			if (tc == tcc) { tc = '0'; }
 			else { tc = '1'; }
@@ -312,7 +317,24 @@ string ByteSub(string s) {
 		if (r1[i - 1] == matrix2[i]) { r1[i - 1] = '0'; }
 		else { r1[i - 1] = '1'; }
 	}
+	reverse(r1.begin(), r1.end());
 	return r1;
+}
+//对text中的所有元素完成字节替换
+void MyByteSub() {
+	for (int i = 1; i <= textSize / 8; i++) {
+		string t = "00000000";
+		for (int j = 1; j <= 8; j++) {
+			t[j - 1] = (text[(i - 1) * 8 + j]);
+		}
+		//cout << t << " ";
+		t = ByteSub(t);
+		//cout << t << " "<<endl;
+		for (int j = 1; j <= 8; j++) {
+			text[(i - 1) * 8 + j] = t[j - 1];
+		}
+	}
+	//printCStar(text, 1, 129);
 }
 //行移位
 void shiftRow() {
@@ -322,51 +344,70 @@ void shiftRow() {
 		for (int j = 1; j <= 4; j++) {//遍历行
 			string temp = "";
 			for (int k = 1; k <= 8; k++) {
-				temp.push_back(text[(i - 1) * 32 + (j - 1) * 8] + k);
+				temp.push_back(text[(i - 1) * 32 + (j - 1) * 8 + k]);
 			}
 			store[j][i] = temp;
+			//cout << j << " " << i << " " << temp << endl;
 		}
 	}
+	//cout << endl;
 	//对第2-4行进行行移位
 	for (int i = 2; i <= 4; i++) {
 		int cross = shift[i - 1];//位移的位数
-		for (int j = 1; j <= textSize / 32; j++) {
-			vector<string>vs;//把这一列的所有字符串都先保存
-			vs.push_back("");//占住零位
-			for (int k = 1; k <= textSize / 32; k++) {
-				vs.push_back(store[i][k]);
+		vector<string>vs;//把这一列的所有字符串都先保存
+		vs.push_back("");//占住零位
+		for (int k = 1; k <= textSize / 32; k++) {
+			vs.push_back(store[i][k]);
+		}
+		for (int k = 1; k <= textSize / 32; k++) {//移位
+			if (k + cross <= textSize / 32) {
+				store[i][k] = vs[k + cross];
 			}
-			for (int k = 1; k <= textSize / 32; k++) {//移位
-				if (k + cross <= textSize / 32) {
-					store[i][k] = vs[k + cross];
-				}
-				else {
-					store[i][k] = vs[k + cross-textSize/32];
-				}
+			else {
+				store[i][k] = vs[k + cross - textSize / 32];
 			}
+		}
+	}
+	//cout << endl;
+	//把store中的元素写回到text中
+	for (int i = 1; i <= textSize / 32; i++) {
+		for (int j = 1; j <= 4; j++) {
+			string s = store[j][i];
+			for (int k = 1; k <= 8; k++) {
+				text[(i - 1) * 32 + (j - 1) * 8 + k] = s[k - 1];
+			}
+			//cout << j << " " << i << " " << s << endl;
 		}
 	}
 }
 //列混合
-void MixColumn(int col){
-	vector<string>vs;
+void MixColumn(int col) {
+	//cout << "col = " << col << endl;
+	vector<string>vs;//一开始保存了text中的一列
+	vector<string>vt;
 	vector<string>rs;
 	//取出text文件第col列的对应的4个字节
 	for (int i = 1; i <= 4; i++) {
 		string temp;
 		for (int j = 1; j <= 8; j++) {
 			temp.push_back(text[(col - 1) * 32 + (i - 1) * 8 + j]);
+			//int tempi = (col - 1) * 32 + (i - 1) * 8 + j;
+			//char c = text[tempi];
+			//char cc = text[1];
 		}
 		vs.push_back(temp);
+		//cout << temp <<" ";
 	}
+	//cout << endl;
 	//循环四次算出列混合后的四个字节
 	for (int i = 1; i <= 4; i++) {
+		vt.clear();
 		for (int j = 1; j <= 4; j++) {
-			vs[j-1]=(mulGF(matrix3[i][j], vs[j - 1]));//乘完之后的结果保存在原来的位置
+			vt.push_back(mulGF(matrix3[i][j], vs[j - 1]));
 		}
 		string temp = "00000000";
-		for (int k = 1; k <= 4; k++) {			
-			temp = StringAddb2(temp, vs[k-1]);//对vs中的内容做累加
+		for (int k = 1; k <= 4; k++) {
+			temp = StringAddb2(temp, vt[k - 1]);//对vs中的内容做累加
 		}
 		rs.push_back(temp);
 	}
@@ -375,12 +416,14 @@ void MixColumn(int col){
 		for (int j = 1; j <= 8; j++) {
 			text[(col - 1) * 32 + (i - 1) * 8 + j] = rs[i - 1][j - 1];
 		}
+		//cout << rs[i-1] <<" ";
 	}
+	//cout << endl;
 }
 //密钥加
-void AddRoundKey(char* c) {
+void AddRoundKey(string s) {
 	for (int i = 1; i <= textSize; i++) {
-		if (text[i] == c[i]) { text[i] = '0'; }
+		if (text[i] == s[i - 1]) { text[i] = '0'; }
 		else { text[i] = '1'; }
 	}
 }
@@ -395,11 +438,11 @@ void RotByte(KeyStore& ks) {
 string GenerateRC(int i) {
 	string temp = "00000000";
 	if (i <= 8) {
-		temp[i - 1] = '1';
+		temp[8 - i] = '1';
 		return temp;
 	}
 	else {
-		for(int j=i-8;j>0;j--){
+		for (int j = i - 8; j > 0; j--) {
 			temp.push_back('0');
 		}
 		temp[0] = '1';
@@ -408,7 +451,7 @@ string GenerateRC(int i) {
 	}
 }
 //密钥扩展
-void KeyExpansion(){
+void KeyExpansion() {
 	//把元密钥放进去
 	for (int i = 0; i < keySize / 32; i++) {
 		vector<string>tvs;
@@ -425,22 +468,86 @@ void KeyExpansion(){
 	//还要弄这么多列出来
 	for (int i = keySize / 32; i <= (textSize / 32) * (Myround + 1); i++) {
 		KeyStore temp = vks[i - 1];
-		if (i % (keySize / 32) == 0) {
+		if ((i % (keySize / 32)) == 0) {
 			RotByte(temp);
 			temp.l1 = ByteSub(temp.l1);
 			temp.l2 = ByteSub(temp.l2);
 			temp.l3 = ByteSub(temp.l3);
 			temp.l4 = ByteSub(temp.l4);
-			string  s = GenerateRC(i % (keySize / 32));
+			string  s = GenerateRC(i / (keySize / 32));
 			temp.l1 = StringAddb2(temp.l1, s);
+			//cout << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
 		}//更新temp
 		KeyStore t = vks[i - keySize / 32];//取出前面的一个周期的对应位置的来
+		//cout << "temp:" << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
+		//cout << "t:" << t.l1 << " " << t.l2 << " " << t.l3 << " " << t.l4 << endl;
 		string s1 = StringAddb2(temp.l1, t.l1);
 		string s2 = StringAddb2(temp.l2, t.l2);
 		string s3 = StringAddb2(temp.l3, t.l3);
 		string s4 = StringAddb2(temp.l4, t.l4);
 		KeyStore rs(s1, s2, s3, s4);
+		//cout << s1 << " " << s2 << " " << s3 <<" "<< s4 << endl;
 		vks.push_back(rs);
+	}
+}
+//注意vks是从第0个开始,从[start，开始取
+string generateUsedKey(int start) {
+	string s = "";
+	for (int i = 1; i <= textSize / 32; i++) {
+		KeyStore ks = vks[start + i - 1];
+		s.append(ks.l1);
+		s.append(ks.l2);
+		s.append(ks.l3);
+		s.append(ks.l4);
+	}
+	return s;
+	//cout << s << endl;
+}
+void test1() {
+	printCStar(text, 1, 129);
+	printCStar(key, 1, 129);
+	cout << textSize << " " << keySize << " " << Myround << endl;
+	cout << shift[1] << " " << shift[2] << " " << shift[3];
+}
+void Round(string KeyS) {//col>=1
+	MyByteSub();
+	//cout << "after bytesub  "<<endl;
+	//printCStar(text, 1, 129);
+	shiftRow();
+	//cout << "after shiftRow  "<<endl;
+	//printCStar(text, 1, 129);
+	for (int i = 1; i <= textSize / 32; i++) {
+		MixColumn(i);
+	}
+	//cout << "after mix column" << endl;
+	//printCStar(text, 1, 129);
+	AddRoundKey(KeyS);
+	//cout << "after addRoundKey" << endl;
+	//printCStar(text, 1, 129);
+}
+void FinalRound(string KeyS) {
+	MyByteSub();
+	shiftRow();
+	AddRoundKey(KeyS);
+}
+void encrypt(TestData1 td) {
+	gettext(td);//初始化明文
+	getkey(td);//初始化密文
+	SetValue();//初始化轮数等信息
+	KeyExpansion();//完成轮密钥的初始化
+	//test1();
+	//printCStar(key, 1, 129);
+	string s = generateUsedKey(0);
+	//cout << s << endl;
+	//printCStar(text, 1, 129);
+	AddRoundKey(s);
+	//cout << "after add" << endl;
+	//printCStar(text, 1, 129);
+	for (int i = 1; i <= Myround; i++) {
+		string s = generateUsedKey(i * textSize / 32);
+		//cout << s << endl;
+		if (i == Myround) { FinalRound(s); break; }
+		Round(s);
 	}
 }
 void test() {
@@ -457,5 +564,9 @@ void test() {
 }
 
 int main() {
-	//test();
+	encrypt(td2);
+	printCStar(text, 1, 129);
+	//cout << endl;
+	//cout << mulGF("00000010", "11100000") << endl;
+	//cout << mulGF("00000011", "01100011") << endl;
 }
