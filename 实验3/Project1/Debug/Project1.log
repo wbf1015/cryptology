@@ -1,0 +1,13 @@
+﻿  源.cpp
+G:\code\cryptology\实验3\Project1\源.cpp(184,29): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+G:\code\cryptology\实验3\Project1\源.cpp(230,20): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\Project1\源.cpp(231,9): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\Project1\源.cpp(322,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\Project1\源.cpp(337,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\Project1\源.cpp(352,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验3\Project1\源.cpp(1031,11): warning C4566: 由通用字符名称“\u05B5”表示的字符不能在当前代码页(936)中表示出来
+G:\code\cryptology\实验3\Project1\源.cpp(1054,11): warning C4566: 由通用字符名称“\u05B5”表示的字符不能在当前代码页(936)中表示出来
+G:\code\cryptology\实验3\Project1\源.cpp(124): warning C4715: “Hex2Binary”: 不是所有的控件路径都返回值
+G:\code\cryptology\实验3\Project1\源.cpp(105): warning C4715: “Binary2Hex”: 不是所有的控件路径都返回值
+G:\code\cryptology\实验3\Project1\源.cpp(195): warning C4715: “CharAddb”: 不是所有的控件路径都返回值
+  Project1.vcxproj -> G:\code\cryptology\实验3\Project1\Debug\Project1.exe
