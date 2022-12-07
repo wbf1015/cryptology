@@ -4,13 +4,13 @@
 #include<string>
 #include<algorithm>
 using namespace std;
-int textSize;//Ã÷ÎÄ³¤¶È
-int keySize;//ÃÜÔ¿³¤¶È
-char* text;//Ã÷ÎÄÄÚÈÝ
-char* key;//ÃÜÔ¿ÄÚÈÝ
-char* out;//½á¹û
-int Myround;//µü´úµÄÂÖÊý
-int shift[4]{ 0 };//ÒÆÎ»Ê±µÄÎ»Êý
+int textSize;//ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½
+int keySize;//ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½
+char* text;//ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½
+char* key;//ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½
+char* out;//ï¿½ï¿½ï¿½
+int Myround;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int shift[4]{ 0 };//ï¿½ï¿½Î»Ê±ï¿½ï¿½Î»ï¿½ï¿½
 string mx = "100011011";
 class TestData1 {
 public:
@@ -19,7 +19,7 @@ public:
 	string text = "0001, 0001, 01a1, 98af, da78, 1734, 8615, 3566";
 	string key = "0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594";
 	string out = "6cdd, 596b, 8f56, 42cb, d23b, 4798, 1a65, 422a";
-	TestData1(int ts, int ks, string text, string key, string out) {
+	TestData1(int ts, int ks, string text, string key, string out="") {
 		this->textSize = ts;
 		this->keySize = ks;
 		this->text = text;
@@ -29,6 +29,7 @@ public:
 	TestData1() {};
 }td1;
 TestData1 td2(128, 128, "3243, f6a8, 885a, 308d, 3131, 98a2, e037, 0734", "2b7e, 1516, 28ae, d2a6, abf7, 1588, 09cf, 4f3c", "3925, 841d, 02dc, 09fb, dc11, 8597, 196a, 0b32");
+//ï¿½Ö½ï¿½ï¿½æ»»ï¿½Ä¼ï¿½ï¿½Ü¾ï¿½ï¿½ï¿½
 char matrix1[9][9]{
 	{},
 	{'0','1','0','0','0','1','1','1','1'},
@@ -40,7 +41,9 @@ char matrix1[9][9]{
 	{'0','0','0','1','1','1','1','1','0'},
 	{'0','0','0','0','1','1','1','1','1'},
 };
+//ï¿½Ö½ï¿½ï¿½æ»»Ê¹ï¿½ÃµÄ¾ï¿½ï¿½ï¿½
 char matrix2[9]{ '0','1','1','0','0','0','1','1','0' };
+//ï¿½Ð»ï¿½ï¿½Ê¹ï¿½ÃµÄ¾ï¿½ï¿½ï¿½
 string matrix3[5][5]{
 	{"","","","",""},
 	{"","00000010","00000011","00000001","00000001"},
@@ -48,7 +51,28 @@ string matrix3[5][5]{
 	{"","00000001","00000001","00000010","00000011"},
 	{"","00000011","00000001","00000001","00000010"},
 };
-class KeyStore {//Õâ¸ö¾ÍÊÇÒ»ÁÐ
+//ï¿½Ö½ï¿½ï¿½æ»»Ê¹ï¿½ÃµÄ½ï¿½ï¿½Ü¾ï¿½ï¿½ï¿½
+char matrix4[9][9]{
+	{},
+	{'0','0','0','1','0','0','1','0','1'},
+	{'0','1','0','0','1','0','0','1','0'},
+	{'0','0','1','0','0','1','0','0','1'},
+	{'0','1','0','1','0','0','1','0','0'},
+	{'0','0','1','0','1','0','0','1','0'},
+	{'0','0','0','1','0','1','0','0','1'},
+	{'0','1','0','0','1','0','1','0','0'},
+	{'0','0','1','0','0','1','0','1','0'},
+};
+char matrix5[9]{ '0','1','0','1','0','0','0','0','0' };
+//ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½Ï¾ï¿½ï¿½ï¿½
+string matrix6[5][5]{
+	{"","","","",""},
+	{"","00001110","00001011","00001101","00001001"},
+	{"","00001001","00001110","00001011","00001101"},
+	{"","00001101","00001001","00001110","00001011"},
+	{"","00001011","00001101","00001001","00001110"},
+};
+class KeyStore {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 public:
 	string l1;
 	string l2;
@@ -60,31 +84,26 @@ public:
 	}
 };
 vector<KeyStore>vks;
-//¸ù¾ÝÃ÷ÎÄ³¤¶ÈÒÔ¼°ÃÜÎÄ³¤¶ÈÉèÖÃµü´úÂÖÊýÒÔ¼°Î»ÒÆÁ¿
-void SetValue() {
-	//ÏÈÉèÖÃµü´úÂÖÊý
-	if (textSize == 128 && keySize == 128) { Myround = 10; }
-	if (textSize == 192 && keySize == 128) { Myround = 12; }
-	if (textSize == 256 && keySize == 128) { Myround = 14; }
-	if (textSize == 128 && keySize == 192) { Myround = 12; }
-	if (textSize == 192 && keySize == 192) { Myround = 12; }
-	if (textSize == 256 && keySize == 192) { Myround = 12; }
-	if (textSize == 128 && keySize == 256) { Myround = 14; }
-	if (textSize == 192 && keySize == 256) { Myround = 14; }
-	if (textSize == 256 && keySize == 256) { Myround = 14; }
-	//ÔÙÉèÖÃÒÆ¶¯µÄÎ»ÒÆÁ¿
-	if (textSize == 128) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
-	if (textSize == 192) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
-	if (textSize == 256) { shift[1] = 1; shift[2] = 3; shift[3] = 4; }
+//2ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îª16ï¿½ï¿½ï¿½ï¿½
+char Binary2Hex(string s) {
+	if (s == "0000") { return '0'; }
+	if (s == "0001") { return '1'; }
+	if (s == "0010") { return '2'; }
+	if (s == "0011") { return '3'; }
+	if (s == "0100") { return '4'; }
+	if (s == "0101") { return '5'; }
+	if (s == "0110") { return '6'; }
+	if (s == "0111") { return '7'; }
+	if (s == "1000") { return '8'; }
+	if (s == "1001") { return '9'; }
+	if (s == "1010") { return 'A'; }
+	if (s == "1011") { return 'B'; }
+	if (s == "1100") { return 'C'; }
+	if (s == "1101") { return 'D'; }
+	if (s == "1110") { return 'E'; }
+	if (s == "1111") { return 'F'; }
 }
-//´òÓ¡char*
-void printCStar(char* c, int start, int end) {
-	for (int i = start; i < end; i++) {
-		cout << c[i];
-		if (i % 8 == 0) { cout << endl; }
-	}cout << endl;
-}
-//16½øÖÆ×ª»»Îª2½øÖÆ
+//16ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îª2ï¿½ï¿½ï¿½ï¿½
 string Hex2Binary(char c) {
 	if (c == '0') { return "0000"; }
 	if (c == '1') { return "0001"; }
@@ -103,7 +122,36 @@ string Hex2Binary(char c) {
 	if (c == 'e') { return "1110"; }
 	if (c == 'f') { return "1111"; }
 }
-//¶þ½øÖÆ×ÔÔö
+//ï¿½ï¿½Ó¡char*
+void printCStar(char* c, int start, int end) {
+	for (int i = start; i < end; i++) {
+		cout << c[i];
+		if (i % 8 == 0) { cout << endl; }
+	}cout << endl;
+}
+void CStar2HEX(char* c, int start, int end) {
+	int count = 0;
+	for (int i = start; i < end; i+=4) {
+		string s = "";
+		s.push_back(c[i]);
+		s.push_back(c[i+1]);
+		s.push_back(c[i+2]);
+		s.push_back(c[i+3]);
+		cout << Binary2Hex(s);
+		count++;
+		if (count % 4 == 0) { cout << ","; }
+	}
+	cout << endl;
+}
+int findDifference(char* c1, char* c2, int start, int end) {
+	int count = 0;
+	for (int i = start; i < end; i++) {
+		if (c1[i] == c2[i]) { count++; }
+	}
+	return count;
+}
+//-------------------------------------------------------Ù¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½-----------------------------------------------
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 string StringInc(string a) {
 	char jw = '0';
 	int la = a.length();
@@ -126,7 +174,7 @@ string StringInc(string a) {
 	}
 	return a;
 }
-//´ÓstringÌáÈ¡¶ÔÓ¦µÄint
+//ï¿½ï¿½stringï¿½ï¿½È¡ï¿½ï¿½Ó¦ï¿½ï¿½int
 int String2Intb(string s) {
 	int r = 0;
 	if (s.length() == 8) {
@@ -139,14 +187,14 @@ int String2Intb(string s) {
 	}
 	return r;
 }
-//¶ÔÓ¦Î»Òì»ò
+//ï¿½ï¿½Ó¦Î»ï¿½ï¿½ï¿½
 char CharAddb(char a, char b) {
 	if (a == '0' && b == '0') { return '0'; }
 	if (a == '0' && b == '1') { return '1'; }
 	if (a == '1' && b == '0') { return '1'; }
 	if (a == '1' && b == '1') { return '0'; }
 }
-//Ã»ÓÐ½øÎ»µÄ¼Ó·¨
+//Ã»ï¿½Ð½ï¿½Î»ï¿½Ä¼Ó·ï¿½
 string StringAddb2(string a, string b) {
 	string r = "00000000";
 	for (int i = 0; i < 8; i++) {
@@ -154,15 +202,15 @@ string StringAddb2(string a, string b) {
 	}
 	return r;
 }
-//×öÙ¤ÂÞÍßÓòÉÏµÄ¼Ó·¨(ÓÐ¼Ó·¨)
+//ï¿½ï¿½Ù¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÄ¼Ó·ï¿½(ï¿½Ð¼Ó·ï¿½)
 string StringAddb(string a, string b) {
-	int la = a.length();//ÄÃµ½aµÄ³¤¶È
-	int lb = b.length();//ÄÃµ½bµÄ³¤¶È
+	int la = a.length();//ï¿½Ãµï¿½aï¿½Ä³ï¿½ï¿½ï¿½
+	int lb = b.length();//ï¿½Ãµï¿½bï¿½Ä³ï¿½ï¿½ï¿½
 	int l;
-	vector<char>ls;//´ú±í³¤µÄstringµÄvector
-	vector<char>ss;//´ú±í¶ÎµÄstringµÄvector
-	vector<char>rs;//½á¹û×Ö·û´®
-	if (la >= lb) {//aÊÇ¸ü³¤µÄ
+	vector<char>ls;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½stringï¿½ï¿½vector
+	vector<char>ss;//ï¿½ï¿½ï¿½ï¿½Îµï¿½stringï¿½ï¿½vector
+	vector<char>rs;//ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
+	if (la >= lb) {//aï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½
 		for (int i = la - 1; i >= 0; i--) {
 			ls.push_back(a[i]);
 		}
@@ -197,7 +245,7 @@ string StringAddb(string a, string b) {
 	}
 	return s;
 }
-//Ïàµ±ÓÚ×öÈ¡Ä£ÔËËã
+//ï¿½àµ±ï¿½ï¿½ï¿½ï¿½È¡Ä£ï¿½ï¿½ï¿½ï¿½
 string StringModb(string a) {
 	string temp = a;
 	int la = temp.length();
@@ -215,7 +263,7 @@ string StringModb(string a) {
 	}
 	return rs;
 }
-//Ù¤ÂÞÍßÓòÉÏµÄ³Ë·¨ÔËËã
+//Ù¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÄ³Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 string mulGF(string a, string b) {
 	if (a == "00000000" || b == "00000000") {
 		return "00000000";
@@ -252,7 +300,7 @@ string mulGF(string a, string b) {
 	return temp;
 }
 string reverseGF(string a) {
-	if (a == "00000000") { return "00000000"; }//0Ó³Éäµ½×Ô¼º
+	if (a == "00000000") { return "00000000"; }//0Ó³ï¿½äµ½ï¿½Ô¼ï¿½
 	string s = "00000000";
 	for (int i = 1; i <= 256; i++) {
 		;
@@ -265,12 +313,12 @@ string reverseGF(string a) {
 	}
 	return s;
 }
-//ÐèÒªÓÃ²âÊÔÓÃÀý2Ö±½Ó°ÑTestData1¸Ä³ÉTestData2¾ÍÐÐ
+//-------------------------------------------------------Ù¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½-----------------------------------------------
+//ï¿½ï¿½Òªï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2Ö±ï¿½Ó°ï¿½TestData1ï¿½Ä³ï¿½TestData2ï¿½ï¿½ï¿½ï¿½
 void gettext(TestData1 td) {
 	textSize = td.textSize;
 	int textlength = td.textSize;
 	text = new char[textlength + 1];
-	out = new char[textlength + 1];
 	string s = td.text;
 	int count = 1;
 	for (int i = 0; i < s.length(); i++) {
@@ -297,16 +345,48 @@ void getkey(TestData1 td) {
 		}
 	}
 }
-//×Ö½ÚÌæ»»
+void getout(TestData1 td) {
+	textSize = td.textSize;
+	int textlength = td.textSize;
+	text = new char[textlength + 1];
+	string s = td.out;
+	int count = 1;
+	for (int i = 0; i < s.length(); i++) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+			string t = Hex2Binary(s[i]);
+			for (int j = 0; j < 4; j++) {
+				text[count++] = t[j];
+			}
+		}
+	}
+}
+void SetValue() {
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	if (textSize == 128 && keySize == 128) { Myround = 10; }
+	if (textSize == 192 && keySize == 128) { Myround = 12; }
+	if (textSize == 256 && keySize == 128) { Myround = 14; }
+	if (textSize == 128 && keySize == 192) { Myround = 12; }
+	if (textSize == 192 && keySize == 192) { Myround = 12; }
+	if (textSize == 256 && keySize == 192) { Myround = 12; }
+	if (textSize == 128 && keySize == 256) { Myround = 14; }
+	if (textSize == 192 && keySize == 256) { Myround = 14; }
+	if (textSize == 256 && keySize == 256) { Myround = 14; }
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
+	if (textSize == 128) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
+	if (textSize == 192) { shift[1] = 1; shift[2] = 2; shift[3] = 3; }
+	if (textSize == 256) { shift[1] = 1; shift[2] = 3; shift[3] = 4; }
+}
+//------------------------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½--------------------------------------------
+//ï¿½Ö½ï¿½ï¿½æ»»
 string ByteSub(string s) {
-	string t = reverseGF(s);//µÃµ½¶ÔÓ¦µÄ³Ë·¨ÄæÔª
+	string t = reverseGF(s);//ï¿½Ãµï¿½ï¿½ï¿½Ó¦ï¿½Ä³Ë·ï¿½ï¿½ï¿½Ôª
 	string r1 = "00000000";
 	for (int i = 1; i <= 8; i++) {
-		//Ã¿Ò»¸öÍâ²ãÑ­»·Ëã³öÒ»¸ö±ÈÌØ
+		//Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		char tc = '0';
 		for (int j = 1; j <= 8; j++) {
 			char tcc;
-			if (matrix1[i][j] == '0' || t[7 - (j - 1)] == '0') { tcc = '0'; }//ÕâÀï°´ÕÕÍøÉÏµÄ¸ÄÁËÒ»ÏÂ£¬ÎÒÒ²²»ÖªµÀÎªÊ²Ã´ÒªÕâÃ´¸Ä
+			if (matrix1[i][j] == '0' || t[7 - (j - 1)] == '0') { tcc = '0'; }//ï¿½ï¿½ï¿½ï°´ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÄ¸ï¿½ï¿½ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½Ò²ï¿½ï¿½Öªï¿½ï¿½ÎªÊ²Ã´Òªï¿½ï¿½Ã´ï¿½ï¿½
 			else { tcc = '1'; }
 			if (tc == tcc) { tc = '0'; }
 			else { tc = '1'; }
@@ -320,7 +400,7 @@ string ByteSub(string s) {
 	reverse(r1.begin(), r1.end());
 	return r1;
 }
-//¶ÔtextÖÐµÄËùÓÐÔªËØÍê³É×Ö½ÚÌæ»»
+//ï¿½ï¿½textï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½æ»»
 void MyByteSub() {
 	for (int i = 1; i <= textSize / 8; i++) {
 		string t = "00000000";
@@ -336,12 +416,12 @@ void MyByteSub() {
 	}
 	//printCStar(text, 1, 129);
 }
-//ÐÐÒÆÎ»
+//ï¿½ï¿½ï¿½ï¿½Î»
 void shiftRow() {
-	//¹¹½¨¾ØÕóÐÎÊ½µÄ´æ´¢·½Ê½
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½Ä´æ´¢ï¿½ï¿½Ê½
 	string store[5][9];
-	for (int i = 1; i <= textSize / 32; i++) {//±éÀúÁÐ
-		for (int j = 1; j <= 4; j++) {//±éÀúÐÐ
+	for (int i = 1; i <= textSize / 32; i++) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		for (int j = 1; j <= 4; j++) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			string temp = "";
 			for (int k = 1; k <= 8; k++) {
 				temp.push_back(text[(i - 1) * 32 + (j - 1) * 8 + k]);
@@ -351,15 +431,15 @@ void shiftRow() {
 		}
 	}
 	//cout << endl;
-	//¶ÔµÚ2-4ÐÐ½øÐÐÐÐÒÆÎ»
+	//ï¿½Ôµï¿½2-4ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
 	for (int i = 2; i <= 4; i++) {
-		int cross = shift[i - 1];//Î»ÒÆµÄÎ»Êý
-		vector<string>vs;//°ÑÕâÒ»ÁÐµÄËùÓÐ×Ö·û´®¶¼ÏÈ±£´æ
-		vs.push_back("");//Õ¼×¡ÁãÎ»
+		int cross = shift[i - 1];//Î»ï¿½Æµï¿½Î»ï¿½ï¿½
+		vector<string>vs;//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È±ï¿½ï¿½ï¿½
+		vs.push_back("");//Õ¼×¡ï¿½ï¿½Î»
 		for (int k = 1; k <= textSize / 32; k++) {
 			vs.push_back(store[i][k]);
 		}
-		for (int k = 1; k <= textSize / 32; k++) {//ÒÆÎ»
+		for (int k = 1; k <= textSize / 32; k++) {//ï¿½ï¿½Î»
 			if (k + cross <= textSize / 32) {
 				store[i][k] = vs[k + cross];
 			}
@@ -369,7 +449,7 @@ void shiftRow() {
 		}
 	}
 	//cout << endl;
-	//°ÑstoreÖÐµÄÔªËØÐ´»Øµ½textÖÐ
+	//ï¿½ï¿½storeï¿½Ðµï¿½Ôªï¿½ï¿½Ð´ï¿½Øµï¿½textï¿½ï¿½
 	for (int i = 1; i <= textSize / 32; i++) {
 		for (int j = 1; j <= 4; j++) {
 			string s = store[j][i];
@@ -380,13 +460,13 @@ void shiftRow() {
 		}
 	}
 }
-//ÁÐ»ìºÏ
+//ï¿½Ð»ï¿½ï¿½
 void MixColumn(int col) {
 	//cout << "col = " << col << endl;
-	vector<string>vs;//Ò»¿ªÊ¼±£´æÁËtextÖÐµÄÒ»ÁÐ
+	vector<string>vs;//Ò»ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½textï¿½Ðµï¿½Ò»ï¿½ï¿½
 	vector<string>vt;
 	vector<string>rs;
-	//È¡³ötextÎÄ¼þµÚcolÁÐµÄ¶ÔÓ¦µÄ4¸ö×Ö½Ú
+	//È¡ï¿½ï¿½textï¿½Ä¼ï¿½ï¿½ï¿½colï¿½ÐµÄ¶ï¿½Ó¦ï¿½ï¿½4ï¿½ï¿½ï¿½Ö½ï¿½
 	for (int i = 1; i <= 4; i++) {
 		string temp;
 		for (int j = 1; j <= 8; j++) {
@@ -399,7 +479,7 @@ void MixColumn(int col) {
 		//cout << temp <<" ";
 	}
 	//cout << endl;
-	//Ñ­»·ËÄ´ÎËã³öÁÐ»ìºÏºóµÄËÄ¸ö×Ö½Ú
+	//Ñ­ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½Ïºï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ö½ï¿½
 	for (int i = 1; i <= 4; i++) {
 		vt.clear();
 		for (int j = 1; j <= 4; j++) {
@@ -407,11 +487,11 @@ void MixColumn(int col) {
 		}
 		string temp = "00000000";
 		for (int k = 1; k <= 4; k++) {
-			temp = StringAddb2(temp, vt[k - 1]);//¶ÔvsÖÐµÄÄÚÈÝ×öÀÛ¼Ó
+			temp = StringAddb2(temp, vt[k - 1]);//ï¿½ï¿½vsï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½
 		}
 		rs.push_back(temp);
 	}
-	//°Ñ½á¹ûÌî»ØÈ¥
+	//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½È¥
 	for (int i = 1; i <= 4; i++) {
 		for (int j = 1; j <= 8; j++) {
 			text[(col - 1) * 32 + (i - 1) * 8 + j] = rs[i - 1][j - 1];
@@ -420,14 +500,14 @@ void MixColumn(int col) {
 	}
 	//cout << endl;
 }
-//ÃÜÔ¿¼Ó
+//ï¿½ï¿½Ô¿ï¿½ï¿½
 void AddRoundKey(string s) {
 	for (int i = 1; i <= textSize; i++) {
 		if (text[i] == s[i - 1]) { text[i] = '0'; }
 		else { text[i] = '1'; }
 	}
 }
-//ÃÜÔ¿²úÉúÖÐRotByteµÄÊ¹ÓÃ
+//ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RotByteï¿½ï¿½Ê¹ï¿½ï¿½
 void RotByte(KeyStore& ks) {
 	string temp = ks.l1;
 	ks.l1 = ks.l2;
@@ -450,9 +530,10 @@ string GenerateRC(int i) {
 		return temp;
 	}
 }
-//ÃÜÔ¿À©Õ¹
+//ï¿½ï¿½Ô¿ï¿½ï¿½Õ¹
 void KeyExpansion() {
-	//°ÑÔªÃÜÔ¿·Å½øÈ¥
+	vks.clear();
+	//ï¿½ï¿½Ôªï¿½ï¿½Ô¿ï¿½Å½ï¿½È¥
 	for (int i = 0; i < keySize / 32; i++) {
 		vector<string>tvs;
 		for (int j = 1; j <= 4; j++) {
@@ -465,7 +546,7 @@ void KeyExpansion() {
 		KeyStore ks(tvs[0], tvs[1], tvs[2], tvs[3]);
 		vks.push_back(ks);
 	}
-	//»¹ÒªÅªÕâÃ´¶àÁÐ³öÀ´
+	//ï¿½ï¿½ÒªÅªï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½
 	for (int i = keySize / 32; i <= (textSize / 32) * (Myround + 1); i++) {
 		KeyStore temp = vks[i - 1];
 		if ((i % (keySize / 32)) == 0) {
@@ -477,8 +558,8 @@ void KeyExpansion() {
 			string  s = GenerateRC(i / (keySize / 32));
 			temp.l1 = StringAddb2(temp.l1, s);
 			//cout << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
-		}//¸üÐÂtemp
-		KeyStore t = vks[i - keySize / 32];//È¡³öÇ°ÃæµÄÒ»¸öÖÜÆÚµÄ¶ÔÓ¦Î»ÖÃµÄÀ´
+		}//ï¿½ï¿½ï¿½ï¿½temp
+		KeyStore t = vks[i - keySize / 32];//È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ¶ï¿½Ó¦Î»ï¿½Ãµï¿½ï¿½ï¿½
 		//cout << "temp:" << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
 		//cout << "t:" << t.l1 << " " << t.l2 << " " << t.l3 << " " << t.l4 << endl;
 		string s1 = StringAddb2(temp.l1, t.l1);
@@ -490,7 +571,7 @@ void KeyExpansion() {
 		vks.push_back(rs);
 	}
 }
-//×¢ÒâvksÊÇ´ÓµÚ0¸ö¿ªÊ¼,´Ó[start£¬¿ªÊ¼È¡
+//×¢ï¿½ï¿½vksï¿½Ç´Óµï¿½0ï¿½ï¿½ï¿½ï¿½Ê¼,ï¿½ï¿½[startï¿½ï¿½ï¿½ï¿½Ê¼È¡
 string generateUsedKey(int start) {
 	string s = "";
 	for (int i = 1; i <= textSize / 32; i++) {
@@ -531,10 +612,10 @@ void FinalRound(string KeyS) {
 	AddRoundKey(KeyS);
 }
 void encrypt(TestData1 td) {
-	gettext(td);//³õÊ¼»¯Ã÷ÎÄ
-	getkey(td);//³õÊ¼»¯ÃÜÎÄ
-	SetValue();//³õÊ¼»¯ÂÖÊýµÈÐÅÏ¢
-	KeyExpansion();//Íê³ÉÂÖÃÜÔ¿µÄ³õÊ¼»¯
+	gettext(td);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	getkey(td);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	SetValue();//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+	KeyExpansion();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
 	//test1();
 	//printCStar(key, 1, 129);
 	string s = generateUsedKey(0);
@@ -550,6 +631,387 @@ void encrypt(TestData1 td) {
 		Round(s);
 	}
 }
+//------------------------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½--------------------------------------------
+//------------------------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½--------------------------------------------
+//ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½æ»»
+string RByteSub(string s) {
+	string t = s;//ï¿½Ãµï¿½ï¿½ï¿½Ó¦ï¿½Ä³Ë·ï¿½ï¿½ï¿½Ôª
+	string r1 = "00000000";
+	for (int i = 1; i <= 8; i++) {
+		//Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		char tc = '0';
+		for (int j = 1; j <= 8; j++) {
+			char tcc;
+			if (matrix4[i][j] == '0' || t[7 - (j - 1)] == '0') { tcc = '0'; }//ï¿½ï¿½ï¿½ï°´ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÄ¸ï¿½ï¿½ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½Ò²ï¿½ï¿½Öªï¿½ï¿½ÎªÊ²Ã´Òªï¿½ï¿½Ã´ï¿½ï¿½
+			else { tcc = '1'; }
+			if (tc == tcc) { tc = '0'; }
+			else { tc = '1'; }
+		}
+		r1[i - 1] = tc;
+	}
+	for (int i = 1; i <= 8; i++) {
+		if (r1[i - 1] == matrix5[i]) { r1[i - 1] = '0'; }
+		else { r1[i - 1] = '1'; }
+	}
+	reverse(r1.begin(), r1.end());
+	r1 = reverseGF(r1);
+	return r1;
+}
+//ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½æ»»
+void RMyByteSub() {
+	for (int i = 1; i <= textSize / 8; i++) {
+		string t = "00000000";
+		for (int j = 1; j <= 8; j++) {
+			t[j - 1] = (text[(i - 1) * 8 + j]);
+		}
+		//cout << t << " ";
+		t = RByteSub(t);
+		//cout << t << " "<<endl;
+		for (int j = 1; j <= 8; j++) {
+			text[(i - 1) * 8 + j] = t[j - 1];
+		}
+	}
+	//printCStar(text, 1, 129);
+}
+//ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ä»»
+void RshiftRow() {
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½Ä´æ´¢ï¿½ï¿½Ê½
+	string store[5][9];
+	for (int i = 1; i <= textSize / 32; i++) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		for (int j = 1; j <= 4; j++) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			string temp = "";
+			for (int k = 1; k <= 8; k++) {
+				temp.push_back(text[(i - 1) * 32 + (j - 1) * 8 + k]);
+			}
+			store[j][i] = temp;
+			//cout << j << " " << i << " " << temp << endl;
+		}
+	}
+	//cout << endl;
+	//ï¿½Ôµï¿½2-4ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+	for (int i = 2; i <= 4; i++) {
+		int cross =(textSize/32)-shift[i - 1];//Î»ï¿½Æµï¿½Î»ï¿½ï¿½
+		vector<string>vs;//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È±ï¿½ï¿½ï¿½
+		vs.push_back("");//Õ¼×¡ï¿½ï¿½Î»
+		for (int k = 1; k <= textSize / 32; k++) {
+			vs.push_back(store[i][k]);
+		}
+		for (int k = 1; k <= textSize / 32; k++) {//ï¿½ï¿½Î»
+			if (k + cross <= textSize / 32) {
+				store[i][k] = vs[k + cross];
+			}
+			else {
+				store[i][k] = vs[k + cross - textSize / 32];
+			}
+		}
+	}
+	//cout << endl;
+	//ï¿½ï¿½storeï¿½Ðµï¿½Ôªï¿½ï¿½Ð´ï¿½Øµï¿½textï¿½ï¿½
+	for (int i = 1; i <= textSize / 32; i++) {
+		for (int j = 1; j <= 4; j++) {
+			string s = store[j][i];
+			for (int k = 1; k <= 8; k++) {
+				text[(i - 1) * 32 + (j - 1) * 8 + k] = s[k - 1];
+			}
+			//cout << j << " " << i << " " << s << endl;
+		}
+	}
+}
+//ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½
+void RMixColumn(int col) {
+	//cout << "col = " << col << endl;
+	vector<string>vs;//Ò»ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½textï¿½Ðµï¿½Ò»ï¿½ï¿½
+	vector<string>vt;
+	vector<string>rs;
+	//È¡ï¿½ï¿½textï¿½Ä¼ï¿½ï¿½ï¿½colï¿½ÐµÄ¶ï¿½Ó¦ï¿½ï¿½4ï¿½ï¿½ï¿½Ö½ï¿½
+	for (int i = 1; i <= 4; i++) {
+		string temp;
+		for (int j = 1; j <= 8; j++) {
+			temp.push_back(text[(col - 1) * 32 + (i - 1) * 8 + j]);
+			//int tempi = (col - 1) * 32 + (i - 1) * 8 + j;
+			//char c = text[tempi];
+			//char cc = text[1];
+		}
+		vs.push_back(temp);
+		//cout << temp <<" ";
+	}
+	//cout << endl;
+	//Ñ­ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½Ïºï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ö½ï¿½
+	for (int i = 1; i <= 4; i++) {
+		vt.clear();
+		for (int j = 1; j <= 4; j++) {
+			vt.push_back(mulGF(matrix6[i][j], vs[j - 1]));
+		}
+		string temp = "00000000";
+		for (int k = 1; k <= 4; k++) {
+			temp = StringAddb2(temp, vt[k - 1]);//ï¿½ï¿½vsï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½
+		}
+		rs.push_back(temp);
+	}
+	//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½È¥
+	for (int i = 1; i <= 4; i++) {
+		for (int j = 1; j <= 8; j++) {
+			text[(col - 1) * 32 + (i - 1) * 8 + j] = rs[i - 1][j - 1];
+		}
+		//cout << rs[i-1] <<" ";
+	}
+	//cout << endl;
+}
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½Éµï¿½ï¿½Ð»ï¿½ï¿½
+void RMixColumn(KeyStore &ks) {
+	//cout << "col = " << col << endl;
+	vector<string>vs;//Ò»ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½textï¿½Ðµï¿½Ò»ï¿½ï¿½
+	vector<string>vt;
+	vector<string>rs;
+	vs.push_back(ks.l1);
+	vs.push_back(ks.l2);
+	vs.push_back(ks.l3);
+	vs.push_back(ks.l4);
+	//cout << endl;
+	//Ñ­ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½Ïºï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ö½ï¿½
+	for (int i = 1; i <= 4; i++) {
+		vt.clear();
+		for (int j = 1; j <= 4; j++) {
+			vt.push_back(mulGF(matrix6[i][j], vs[j - 1]));
+		}
+		string temp = "00000000";
+		for (int k = 1; k <= 4; k++) {
+			temp = StringAddb2(temp, vt[k - 1]);//ï¿½ï¿½vsï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½
+		}
+		rs.push_back(temp);
+	}
+	ks.l1 = rs[0];
+	ks.l2 = rs[1];
+	ks.l3 = rs[2];
+	ks.l4 = rs[3];
+}
+//ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ó£ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void RAddRoundKey(string s) {
+	for (int i = 1; i <= textSize; i++) {
+		if (text[i] == s[i - 1]) { text[i] = '0'; }
+		else { text[i] = '1'; }
+	}
+}
+//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vksï¿½ï¿½Ò»ï¿½ï¿½reverse
+void RKeyExpansion() {
+	vks.clear();
+	if (keySize / 32 <= 6) {//keySizeÎª128 192ï¿½ï¿½Ê±ï¿½ï¿½
+		//ï¿½ï¿½Ôªï¿½ï¿½Ô¿ï¿½Å½ï¿½È¥
+		for (int i = 0; i < keySize / 32; i++) {
+			vector<string>tvs;
+			for (int j = 1; j <= 4; j++) {
+				string temp = "";
+				for (int k = 1; k <= 8; k++) {
+					temp.push_back(key[(i) * 32 + (j - 1) * 8 + k]);
+				}
+				tvs.push_back(temp);
+			}
+			KeyStore ks(tvs[0], tvs[1], tvs[2], tvs[3]);
+			vks.push_back(ks);
+		}
+		//ï¿½ï¿½ÒªÅªï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½
+		for (int i = keySize / 32; i < (textSize / 32) * (Myround + 1); i++) {
+			KeyStore temp = vks[i - 1];
+			if ((i % (keySize / 32)) == 0) {
+				RotByte(temp);
+				temp.l1 = ByteSub(temp.l1);
+				temp.l2 = ByteSub(temp.l2);
+				temp.l3 = ByteSub(temp.l3);
+				temp.l4 = ByteSub(temp.l4);
+				string  s = GenerateRC(i / (keySize / 32));
+				temp.l1 = StringAddb2(temp.l1, s);
+				//cout << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
+			}//ï¿½ï¿½ï¿½ï¿½temp
+			KeyStore t = vks[i - keySize / 32];//È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ¶ï¿½Ó¦Î»ï¿½Ãµï¿½ï¿½ï¿½
+			//cout << "temp:" << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
+			//cout << "t:" << t.l1 << " " << t.l2 << " " << t.l3 << " " << t.l4 << endl;
+			string s1 = StringAddb2(temp.l1, t.l1);
+			string s2 = StringAddb2(temp.l2, t.l2);
+			string s3 = StringAddb2(temp.l3, t.l3);
+			string s4 = StringAddb2(temp.l4, t.l4);
+			KeyStore rs(s1, s2, s3, s4);
+			//cout << s1 << " " << s2 << " " << s3 <<" "<< s4 << endl;
+			vks.push_back(rs);
+		}
+	}
+	else {//keySizeÎª256ï¿½ï¿½Ê±ï¿½ï¿½
+		//ï¿½ï¿½Ôªï¿½ï¿½Ô¿ï¿½Å½ï¿½È¥
+		for (int i = 0; i < keySize / 32; i++) {
+			vector<string>tvs;
+			for (int j = 1; j <= 4; j++) {
+				string temp = "";
+				for (int k = 1; k <= 8; k++) {
+					temp.push_back(key[(i) * 32 + (j - 1) * 8 + k]);
+				}
+				tvs.push_back(temp);
+			}
+			KeyStore ks(tvs[0], tvs[1], tvs[2], tvs[3]);
+			vks.push_back(ks);
+		}
+		//ï¿½ï¿½ÒªÅªï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½
+		for (int i = keySize / 32; i < (textSize / 32) * (Myround + 1); i++) {
+			KeyStore temp = vks[i - 1];
+			if ((i % (keySize / 32)) == 0) {
+				RotByte(temp);
+				temp.l1 = ByteSub(temp.l1);
+				temp.l2 = ByteSub(temp.l2);
+				temp.l3 = ByteSub(temp.l3);
+				temp.l4 = ByteSub(temp.l4);
+				string  s = GenerateRC(i / (keySize / 32));
+				temp.l1 = StringAddb2(temp.l1, s);
+				//cout << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
+			}//ï¿½ï¿½ï¿½ï¿½temp
+			else {
+				if ((i % (keySize / 32)) == 4) {
+					temp.l1 = ByteSub(temp.l1);
+					temp.l2 = ByteSub(temp.l2);
+					temp.l3 = ByteSub(temp.l3);
+					temp.l4 = ByteSub(temp.l4);
+				}
+			}
+			KeyStore t = vks[i - keySize / 32];//È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ¶ï¿½Ó¦Î»ï¿½Ãµï¿½ï¿½ï¿½
+			//cout << "temp:" << temp.l1 << " " << temp.l2 << " " << temp.l3 << " " << temp.l4 << endl;
+			//cout << "t:" << t.l1 << " " << t.l2 << " " << t.l3 << " " << t.l4 << endl;
+			string s1 = StringAddb2(temp.l1, t.l1);
+			string s2 = StringAddb2(temp.l2, t.l2);
+			string s3 = StringAddb2(temp.l3, t.l3);
+			string s4 = StringAddb2(temp.l4, t.l4);
+			KeyStore rs(s1, s2, s3, s4);
+			//cout << s1 << " " << s2 << " " << s3 <<" "<< s4 << endl;
+			vks.push_back(rs);
+		}
+	}
+}
+//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Öºï¿½ï¿½ï¿½
+void RRound(string KeyS) {//col>=1
+	RshiftRow();
+	//cout << "after shiftRow  " << endl;
+	//printCStar(text, 1, 129);
+
+	RMyByteSub();
+	//cout << "after bytesub  "<<endl;
+	//printCStar(text, 1, 129);
+
+	RAddRoundKey(KeyS);
+	//cout << "after addRoundKey" << endl;
+	//printCStar(text, 1, 129);
+
+	for (int i = 1; i <= textSize / 32; i++) {
+		RMixColumn(i);
+	}
+	//cout << "after mix column" << endl;
+	//printCStar(text, 1, 129);
+
+}
+void RFinalRound(string KeyS) {
+	RshiftRow();
+	RMyByteSub();
+	RAddRoundKey(KeyS);
+}
+void decrypt(TestData1 td) {
+	getout(td);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	getkey(td);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ô¿
+	SetValue();//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+	RKeyExpansion();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
+	//test1();
+	//cout << endl;
+	//printCStar(key, 1, 129);
+	string s = generateUsedKey(vks.size()-textSize/32);
+	//cout << s << endl;
+	//printCStar(text, 1, 129);
+	RAddRoundKey(s);
+	//cout << "after add" << endl;
+	//printCStar(text, 1, 129);
+	for (int i = 1; i <= Myround; i++) {
+		string s = generateUsedKey(vks.size()-((i+1) * textSize / 32));
+		//cout << s << endl;
+		if (i == Myround) { RFinalRound(s); break; }
+		RRound(s);
+	}
+}
+//------------------------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½--------------------------------------------
+//------------------------------------------------Ñ©ï¿½ï¿½Ð§Ó¦--------------------------------------------
+void Avalanche() {
+	cout << "ï¿½ï¿½ï¿½æ¿ªÊ¼Ñ©ï¿½ï¿½Ð§Ó¦ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½" << td1.text << endl;
+	cout << "ï¿½ï¿½Ô¿Îªï¿½ï¿½" << td1.key << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½Äµï¿½128ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½é¿´ï¿½ï¿½ï¿½ÄµÄ¸Ä±ï¿½ï¿½ï¿½ï¿½" << endl;
+	encrypt(td1);
+	//ï¿½ï¿½td1ï¿½Ä¼ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½text0ï¿½ï¿½
+	char* text0 = new char[129];
+	memcpy(text0, text, 129);
+	int count=0;
+	for (int i = 1; i <= 128; i++) {
+		//Ö±ï¿½Ó°ï¿½encryptï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½copyï¿½ï¿½ï¿½ï¿½
+		gettext(td1);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (text[i] == '0') { text[i] = '1'; }
+		else { text[i] = '0'; }
+		getkey(td1);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		SetValue();//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+		KeyExpansion();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
+		//test1();
+		//printCStar(key, 1, 129);
+		string s = generateUsedKey(0);
+		//cout << s << endl;
+		//printCStar(text, 1, 129);
+		AddRoundKey(s);
+		//cout << "after add" << endl;
+		//printCStar(text, 1, 129);
+		for (int i = 1; i <= Myround; i++) {
+			string s = generateUsedKey(i * textSize / 32);
+			//cout << s << endl;
+			if (i == Myround) { FinalRound(s); break; }
+			Round(s);
+		}
+		cout << "ï¿½Ä±ï¿½ï¿½" << i << "Î»ï¿½Ä½ï¿½ï¿½Îª" << endl;
+		CStar2HEX(text, 1, 129);
+		cout << "ï¿½Ä±ï¿½ï¿½ï¿½" << findDifference(text0, text, 1, 129) << "Î»" << endl;;
+		count += findDifference(text0, text, 1, 129);
+	}
+	double d = (double)count / 128.0;
+	cout << "ï¿½ï¿½128ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸Ä±ï¿½ï¿½Ð£ï¿½Æ½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸Ä±ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Îª" << d << endl;
+}
+void Avalanche2() {
+	cout << "ï¿½ï¿½ï¿½æ¿ªÊ¼Ñ©ï¿½ï¿½Ð§Ó¦ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½" << td1.text << endl;
+	cout << "ï¿½ï¿½Ô¿Îªï¿½ï¿½" << td1.key << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½128ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½é¿´ï¿½ï¿½ï¿½ÄµÄ¸Ä±ï¿½ï¿½ï¿½ï¿½" << endl;
+	encrypt(td1);
+	//ï¿½ï¿½td1ï¿½Ä¼ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½text0ï¿½ï¿½
+	char* text0 = new char[129];
+	memcpy(text0, text, 129);
+	int count = 0;
+	for (int i = 1; i <= 128; i++) {
+		//Ö±ï¿½Ó°ï¿½encryptï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½copyï¿½ï¿½ï¿½ï¿½
+		gettext(td1);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		getkey(td1);//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (key[i] == '0') { key[i] = '1'; }
+		else { key[i] = '0'; }
+		SetValue();//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+		KeyExpansion();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
+		//test1();
+		//printCStar(key, 1, 129);
+		string s = generateUsedKey(0);
+		//cout << s << endl;
+		//printCStar(text, 1, 129);
+		AddRoundKey(s);
+		//cout << "after add" << endl;
+		//printCStar(text, 1, 129);
+		for (int i = 1; i <= Myround; i++) {
+			string s = generateUsedKey(i * textSize / 32);
+			//cout << s << endl;
+			if (i == Myround) { FinalRound(s); break; }
+			Round(s);
+		}
+		cout << "ï¿½Ä±ï¿½ï¿½" << i << "Î»ï¿½Ä½ï¿½ï¿½Îª" << endl;
+		CStar2HEX(text, 1, 129);
+		cout << "ï¿½Ä±ï¿½ï¿½ï¿½" << findDifference(text0, text, 1, 129) << "Î»" << endl;;
+		count += findDifference(text0, text, 1, 129);
+	}
+	double d = (double)count / 128.0;
+	cout << "ï¿½ï¿½128ï¿½Îµï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½Ø¸Ä±ï¿½ï¿½Ð£ï¿½Æ½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸Ä±ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Îª" << d << endl;
+}
+
 void test() {
 	string s1 = "00011011";
 	string s2 = "00101101";
@@ -562,11 +1024,100 @@ void test() {
 	//printCStar(key, 1, 129);
 	cout << ByteSub("11000001");
 }
+void Interaction() {
+	cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AESï¿½ã·¨ï¿½Ä¼Ó½ï¿½ï¿½ï¿½" << endl;
+	cout << "ï¿½é¿´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£º1" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£º2" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£º3" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½Ñ©ï¿½ï¿½Ð§Ó¦ï¿½ï¿½â£º4" << endl;
+	int choose1;
+	cin >> choose1;
+	if (choose1 == 1) {
+		cout << "Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½AESï¿½Ä¼Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½Ä³ï¿½Îª" << td1.textSize << ",ï¿½ï¿½Ô¿ï¿½ï¿½Îª" << td1.keySize << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½Îª" << td1.text << endl;
+		cout << "ï¿½ï¿½Ô¿Îª" << td1.key << endl;
+		cout << "ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½...." << endl;
+		encrypt(td1);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½Îªï¿½ï¿½" << endl;
+		printCStar(text, 1, 129);
+		cout << endl;
+		CStar2HEX(text, 1, 129);
+		cout << endl;
+
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½Ä³ï¿½Îª" << td2.textSize << ",ï¿½ï¿½Ô¿ï¿½ï¿½Îª" << td2.keySize << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½Îª" << td2.text << endl;
+		cout << "ï¿½ï¿½Ô¿Îª" << td2.key << endl;
+		cout << "ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½...." << endl;
+		decrypt(td2);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½Îªï¿½ï¿½" << endl;
+		printCStar(text, 1, 129);
+		cout << endl;
+		CStar2HEX(text, 1, 129);
+		cout << endl;
+	}
+	if (choose1 == 2) {
+		cout << "ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë°´ï¿½ï¿½Òªï¿½ó¼°¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½È£ï¿½ï¿½ï¿½Î»Îªï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ÖµÎª128/192/256" << endl;
+		int MytextSize; cin >> MytextSize;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½Î»Îªï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ÖµÎª128/192/256" << endl;
+		int MykeySize; cin >> MykeySize;
+		getchar();
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Îªï¿½ï¿½ï¿½ï¿½128Î»Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0001, 0001, 01a1, 98af, da78, 1734, 8615, 3566" << endl;
+		string Mytext; getline(cin, Mytext);
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Îªï¿½ï¿½ï¿½ï¿½128Î»Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594" << endl;
+		string Mykey; getline(cin, Mykey);
+		TestData1 td3(MytextSize, MykeySize, Mytext, Mykey);
+		cout<<"MyText=" << Mytext << endl;
+		cout << "MyKey=" << Mykey << endl;
+		cout << "ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½..." << endl;
+		encrypt(td3);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½Æ±ï¿½Ê¾Îªï¿½ï¿½" << endl;
+		printCStar(text, 1, textSize + 1);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½Æ±ï¿½Ê¾Îªï¿½ï¿½" << endl;
+		CStar2HEX(text, 1, textSize + 1);
+	}
+	if (choose1 == 3) {
+		cout << "ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë°´ï¿½ï¿½Òªï¿½ó¼°¸ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½È£ï¿½ï¿½ï¿½Î»Îªï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ÖµÎª128/192/256" << endl;
+		int MytextSize; cin >> MytextSize;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½Î»Îªï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ÖµÎª128/192/256" << endl;
+		int MykeySize; cin >> MykeySize;
+		getchar();
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Îªï¿½ï¿½ï¿½ï¿½128Î»Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½6cdd, 596b, 8f56, 42cb, d23b, 4798, 1a65, 422a" << endl;
+		string Mytext; getline(cin, Mytext);
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½" << endl;
+		cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Îªï¿½ï¿½ï¿½ï¿½128Î»Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594" << endl;
+		string Mykey; getline(cin, Mykey);
+		TestData1 td3(MytextSize, MykeySize, Mytext, Mykey,Mytext);
+		cout << "MyText=" << Mytext << endl;
+		cout << "MyKey=" << Mykey << endl;
+		cout << "ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½..." << endl;
+		cout << endl;
+		decrypt(td3);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½Æ±ï¿½Ê¾Îªï¿½ï¿½" << endl;
+		printCStar(text, 1, textSize + 1);
+		cout << "ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½Æ±ï¿½Ê¾Îªï¿½ï¿½" << endl;
+		CStar2HEX(text, 1, textSize + 1);
+	}
+	if (choose1 == 4) {
+		Avalanche();
+		Avalanche2();
+	}
+	cout << "ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã£ï¿½" << endl;
+}
+
 
 int main() {
-	encrypt(td2);
-	printCStar(text, 1, 129);
-	//cout << endl;
-	//cout << mulGF("00000010", "11100000") << endl;
-	//cout << mulGF("00000011", "01100011") << endl;
+	//encrypt(td2);
+	//printCStar(text, 1, 129);
+	//decrypt(td2);
+	//printCStar(text, 1, 129);
+	//CStar2HEX(text, 1, 129);
+	Interaction();
 }

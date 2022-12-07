@@ -259,21 +259,30 @@ void Decode(int in[4][4], int key[4][4])
 	int subKey[11][4][4];
 	KeyExpansion(key, subKey);
 	AddRoundKey(in, subKey[10]);
+	cout << "after ADD" << endl;
+	printIn(in);
 	for (int i = 9; i >= 0; --i)
 	{
 		ShiftRow(in, type);
+		cout << "after shiftrow" << endl;
+		printIn(in);
 		ByteSub(in, type);
+		cout << "after bytesub" << endl;
+		printIn(in);
 		AddRoundKey(in, subKey[i]);
+		cout << "after ADD" << endl;
+		printIn(in);
 		if (i != 0)
 		{
 			MixColumn(in, type);
+			cout << "after mix column" << endl;
+			printIn(in);
 		}
 
 	}
 }
 
 int main() {
-	cout << mult(2, 63) << endl;
 	cout << "明文（16进制）：0001, 0001, 01a1, 98af, da78, 1734, 8615, 3566" << endl << "密钥（16进制）：0001, 2001, 7101, 98ae, da79, 1714, 6015, 3594" << endl << "密文（16进制）：6cdd, 596b, 8f56, 42cb, d23b, 4798, 1a65, 422a" << endl;
 	cout << "明文（16进制）：3243, f6a8, 885a, 308d, 3131, 98a2, e037, 0734" << endl << "密钥（16进制）：2b7e, 1516, 28ae, d2a6, abf7, 1588, 09cf, 4f3c" << endl << "密文（16进制）：3925, 841d, 02dc, 09fb, dc11, 8597, 196a, 0b32" << endl;
 	int flag;
