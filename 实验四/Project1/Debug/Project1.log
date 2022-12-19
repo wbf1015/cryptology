@@ -1,0 +1,19 @@
+﻿  源.cpp
+G:\code\cryptology\实验四\Project1\BigInt.h(64,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(68,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(85,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(111,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(117,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(140,20): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(142,19): warning C4018: “>=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(142,38): warning C4018: “>=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(155,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(155,38): warning C4018: “>=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(162,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(162,38): warning C4018: “>=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(188,22): warning C4018: “<=”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(209,21): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(232,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(249,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验四\Project1\BigInt.h(23): warning C4715: “Int2Hex”: 不是所有的控件路径都返回值
+  Project1.vcxproj -> G:\code\cryptology\实验四\Project1\Debug\Project1.exe
