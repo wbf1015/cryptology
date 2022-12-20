@@ -34,6 +34,10 @@ public:
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator%(const BigInt& a, const BigInt& b);
 	friend bool operator>=(const BigInt& a, const BigInt& b);
+	friend bool operator<(const BigInt& a, const BigInt& b) {
+		bool ret = a >= b;
+		return !ret;
+	}
 
 
 	//其他功能性函数
@@ -44,6 +48,7 @@ public:
 	bool isLegal();//判断vector中的数是否合法
 	bool strictLegal();//判断长度、数字是否合法
 	void generateNum(int size);//随机生成一个数
+	void generateOdd(int size);
 };
 
 //重载输出运算符
@@ -132,6 +137,13 @@ void BigInt::generateNum(int size) {
 	}
 	//这样才能确保他的位数
 	num[0] = 1;
+}
+
+void BigInt::generateOdd(int size) {
+	generateNum(size);
+	if (num[size - 1] == 0) {
+		num[size - 1] = 1;
+	}
 }
 
 BigInt operator+(const BigInt& a, const BigInt& b) {
@@ -242,6 +254,71 @@ BigInt operator*(const BigInt& a, const BigInt& b) {
 	return ret;
 }
 
+BigInt operator/(const BigInt& a, const BigInt& b) {
+	if (a < b) {
+		cout << "非法的乘法，被除数小于除数" << endl;
+		BigInt bi;
+		return bi;
+	}
+	BigInt Mya(a);
+	vector<int>vi;//存储结果的地方
+	for (int i = 0; i < a.num.size(); i++) {
+		BigInt myb = b;
+		for (int j = 1; j <= ((a.num.size() - 1) - i); j++) {
+			myb.num.push_back(0);
+		}
+		//cout << i << " ";
+		//cout << Mya<<" "<< myb << endl;
+		if (Mya >= myb) {
+			vi.push_back(1);
+			Mya = Mya - myb;
+			continue;
+		}
+		if (Mya < myb) {
+			vi.push_back(0);
+			continue;
+		}
+		//cout << Mya << " " << myb << " " << vi[i]<<endl;
+	}
+	//cout << endl;
+	//去除前导零
+	reverse(vi.begin(), vi.end());
+	for (int i = vi.size() - 1; i >= 0; i--) {
+		if (vi[vi.size() - 1] == 0) { vi.pop_back(); }
+		else { break; }
+	}
+	reverse(vi.begin(), vi.end());
+	BigInt ret(vi.size(), vi);
+	return ret;
+}
+
+BigInt operator%(const BigInt& a, const BigInt& b) {
+	if (a < b) {
+		return b;
+	}
+	BigInt Mya(a);
+	vector<int>vi;//存储结果的地方
+	for (int i = 0; i < a.num.size(); i++) {
+		BigInt myb = b;
+		for (int j = 1; j <= ((a.num.size() - 1) - i); j++) {
+			myb.num.push_back(0);
+		}
+		//cout << i << " ";
+		//cout << Mya<<" "<< myb << endl;
+		if (Mya >= myb) {
+			vi.push_back(1);
+			Mya = Mya - myb;
+			continue;
+		}
+		if (Mya < myb) {
+			vi.push_back(0);
+			continue;
+		}
+		//cout << Mya << " " << myb << " " << vi[i]<<endl;
+	}
+	return Mya;
+}
+
 bool operator>=(const BigInt& a, const BigInt& b) {
 	//假设我们认为a和b都是严格合法的
 	if (a.num.size() > b.num.size()) { return true; }
@@ -251,4 +328,23 @@ bool operator>=(const BigInt& a, const BigInt& b) {
 		if (a.num[i] < b.num[i]) { return false; }
 	}
 	return true;
+}
+
+
+
+
+
+bool Miller_Rabin(BigInt b,int k) {
+	if (b.num[b.num.size() - 1] == 0) { return false; }
+	int s;//这是2的整数次幂的表示
+	BigInt myb(b);
+	BigInt t;//另外以部分
+	BigInt r;//这是计算的剩余结果
+	//首先需要确定s和t
+	while (true) {
+		BigInt bi;
+		bi = myb % 2;
+	}
+
+
 }
