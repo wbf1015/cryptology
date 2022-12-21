@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include<ctime>
+#include <windows.h>
 using namespace std;
 char Int2Hex(int i1, int i2, int i3, int i4) {
 	if (i1 == 0 && i2 == 0 && i3 == 0 && i4 == 0) { return '0'; }
@@ -33,6 +34,7 @@ public:
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator%(const BigInt& a, const BigInt& b);
+	friend bool operator==(const BigInt& a, const BigInt& b);
 	friend bool operator>=(const BigInt& a, const BigInt& b);
 	friend bool operator<(const BigInt& a, const BigInt& b) {
 		bool ret = a >= b;
@@ -49,10 +51,15 @@ public:
 	bool strictLegal();//判断长度、数字是否合法
 	void generateNum(int size);//随机生成一个数
 	void generateOdd(int size);
+	void randGenerate(BigInt& n);
 };
 
 //重载输出运算符
 ostream& operator<<(ostream& out, BigInt& a) {
+	if (a.num.size() == 0) {
+		out << "0";
+		return out;
+	}
 	BigInt t(a);
 	//因为要加零的话其实要在前面补零，所以先reverse一下
 	reverse(t.num.begin(), t.num.end());
@@ -294,7 +301,7 @@ BigInt operator/(const BigInt& a, const BigInt& b) {
 
 BigInt operator%(const BigInt& a, const BigInt& b) {
 	if (a < b) {
-		return b;
+		return a;
 	}
 	BigInt Mya(a);
 	vector<int>vi;//存储结果的地方
@@ -330,21 +337,110 @@ bool operator>=(const BigInt& a, const BigInt& b) {
 	return true;
 }
 
+bool operator==(const BigInt& a, const BigInt& b) {
+	if (a.num.size() != b.num.size()) { return false; }
+	else {
+		for (int i = 0; i < a.num.size(); i++) {
+			if (a.num[i] != b.num[i]) { return false; }
+		}
+	}
+	return true;
+}
 
+void BigInt::randGenerate(BigInt& n){
+	//范围是2到n-2
+	vector<int>vi; vi.push_back(1); vi.push_back(0);
+	BigInt TWO(2, vi);
+	BigInt end = n - TWO;
+	//size不会比n的size大
+	int size;
+	while (true) {
+		size = rand() % (n.num.size()+1);
+		if (size > 0&&size!=1) { break; }
+	}
+L:
+	BigInt ret(size);
+	ret.generateNum(size);
+	if (end < ret) { goto L; }
+	num.clear();
+	for (int i = 0; i < size; i++) {
+		num.push_back(ret.num[i]);
+	}
+}
+
+BigInt pow(BigInt& a, BigInt& b,BigInt& m) {
+	vector<int>vi;
+	vi.push_back(1);
+	BigInt ONE(1, vi);
+	BigInt Myb(b);
+	BigInt Mya(a);
+	Myb = Myb - ONE;
+	if (Myb.num.size() == 0) { Mya = Mya % m; return Mya; }
+	while (true) {
+		if (Myb.num.size() != 0) {
+			Mya = Mya * a;
+			Mya = Mya % m;
+			Myb = Myb - ONE;
+		}
+		else {
+			break;
+		}
+	}
+	return Mya;
+}
 
 
 
 bool Miller_Rabin(BigInt b,int k) {
 	if (b.num[b.num.size() - 1] == 0) { return false; }
-	int s;//这是2的整数次幂的表示
+	int s=0;//这是2的整数次幂的表示
 	BigInt myb(b);
-	BigInt t;//另外以部分
-	BigInt r;//这是计算的剩余结果
+	BigInt t;//另外一部分
+	BigInt r;//每一轮迭代都要用到的
+	//构造一个代表2的BigInt数
+	vector<int>vi; vi.push_back(1); vi.push_back(0);
+	BigInt TWO(2, vi);
+	vector<int>vi2; vi2.push_back(1);
+	BigInt ONE(1, vi2);
+	myb = myb - ONE;
 	//首先需要确定s和t
 	while (true) {
 		BigInt bi;
-		bi = myb % 2;
+		bi = myb % TWO;
+		if (bi.num.size() == 0) {
+			s++;
+			myb = myb / TWO;
+			continue;
+		}
+		else {
+			t = myb;
+			break;
+		}
 	}
-
-
+	//cout << "s= " << s << "  " << "t= " << t << endl;
+	for (int j = 1; j <= k; j++) {
+		BigInt bb;
+		Sleep(1000);
+		bb.randGenerate(b);
+		cout << "bb= " << bb << endl;
+		for (int i = 0; i < s; i++) {
+			if (i == 0) {
+				r = pow(bb, t, b);
+				if (r == ONE) { break; }
+				BigInt check = b - ONE;
+				if (r == check) { break; }
+				if(s==1){ cout << "fail to pass Miller_Rabin" << endl; return false; }
+				continue;
+			}
+			else {
+				r = pow(r, TWO, b);
+				BigInt check = b - ONE;
+				if (r == check) { break; }
+				if (i == s - 1) { cout << "fail to pass Miller_Rabin"<<endl; return false; }
+				continue;
+			}
+		}
+	}
+	cout << "pass Miller_Rabin successfully" << endl;
+	return true;
 }
