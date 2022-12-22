@@ -3,6 +3,7 @@
 #include<vector>
 #include<ctime>
 #include <windows.h>
+#include<map>
 using namespace std;
 char Int2Hex(int i1, int i2, int i3, int i4) {
 	if (i1 == 0 && i2 == 0 && i3 == 0 && i4 == 0) { return '0'; }
@@ -26,7 +27,7 @@ class BigInt {
 public:
 	//类内属性
 	vector<int>num;//用来存储真正的数,在这里我们默认0是最高位
-	bool isSpecial = false;//再做运算时用来判定运算是否合法
+	bool minus = false;//增加负数表示
 
 	//重载运算符
 	friend BigInt operator+(const BigInt& a, const BigInt& b);
@@ -34,7 +35,9 @@ public:
 	friend BigInt operator*(const BigInt& a, const BigInt& b);
 	friend BigInt operator/(const BigInt& a, const BigInt& b);
 	friend BigInt operator%(const BigInt& a, const BigInt& b);
+	//这些比较目前只比较num，不比较正负位
 	friend bool operator==(const BigInt& a, const BigInt& b);
+	friend bool operator!=(const BigInt& a, const BigInt& b) { return !(a == b); }
 	friend bool operator>=(const BigInt& a, const BigInt& b);
 	friend bool operator<(const BigInt& a, const BigInt& b) {
 		bool ret = a >= b;
@@ -44,8 +47,8 @@ public:
 
 	//其他功能性函数
 	BigInt();
-	BigInt(int size);
-	BigInt(int size, vector<int>& v);
+	BigInt(int size, bool minus = false);
+	BigInt(int size, vector<int>& v,bool minus = false);
 	BigInt(const BigInt& bi);
 	bool isLegal();//判断vector中的数是否合法
 	bool strictLegal();//判断长度、数字是否合法
@@ -76,6 +79,7 @@ ostream& operator<<(ostream& out, BigInt& a) {
 	for (int i = 0; i < t.num.size(); i += 4) {
 		vc.push_back(Int2Hex(t.num[i], t.num[i + 1], t.num[i + 2], t.num[i + 3]));
 	}
+	if (a.minus) { cout << "-"; }//增加负数表示
 	//输出，并进行格式控制
 	for (int i = 0; i < vc.size(); i++) {
 		out << vc[i];
@@ -106,20 +110,24 @@ BigInt::BigInt() {
 	num.push_back(0);
 }
 
-BigInt::BigInt(int size) {
+BigInt::BigInt(int size,bool minus) {
 	//自动生成
 	for (int i = 1; i <=size; i++) {
 		num.push_back(0);
 	}
+	this->minus = minus;
 }
 
-BigInt::BigInt(int size, vector<int>& v) {
+BigInt::BigInt(int size, vector<int>& v, bool minus) {
 	for (int i = 0; i < size; i++) {
 		num.push_back(v[i]);
 	}
+	this->minus = minus;
 }
 
 BigInt::BigInt(const BigInt& bi) {
+	this->minus = bi.minus;//增加负数
+	num.clear();
 	for (int i = 0; i < bi.num.size(); i++) {
 		num.push_back(bi.num[i]);
 	}
@@ -154,6 +162,30 @@ void BigInt::generateOdd(int size) {
 }
 
 BigInt operator+(const BigInt& a, const BigInt& b) {
+	//都是负数 (-a)+(-b)=-(a+b)
+	if (a.minus && b.minus) {
+		BigInt Mya(a); Mya.minus = false;
+		BigInt Myb(b); Myb.minus = false;
+		BigInt ret = Mya + Myb;
+		ret.minus = true;
+		return ret;
+	}
+	//a是负数，b是正数 (-a)+b=b-a
+	if (a.minus && !b.minus) {
+		BigInt Mya(a); Mya.minus = false;
+		BigInt Myb(b); Myb.minus = false;
+		BigInt ret;
+		//因为Myb和Mya都是正数，所以减法可以自动判断正负情况
+		ret = Myb - Mya;
+		return ret;
+	}
+	//a是正的，b是负的 a+(-b)=(-b)+a
+	if (!a.minus && b.minus) {
+		//直接转移给上面，让上面去处理
+		BigInt ret = b + a;
+		return ret;
+	}
+	//两个都是正的
 	BigInt t(max(a.num.size(), b.num.size()) + 1);//在这里先多开一位
 	int jw = 0;//进位
 	for (int i = 1; i <= t.num.size(); i++) {
@@ -200,6 +232,30 @@ BigInt operator+(const BigInt& a, const BigInt& b) {
 }
 
 BigInt operator-(const BigInt& a, const BigInt& b) {
+	//两个都是负的  (-a)-(-b)=b-a
+	if (a.minus && b.minus) {
+		BigInt Mya(a); Mya.minus = false;
+		BigInt Myb(b); Myb.minus = false;
+		//同理MYb和Mya都是正的，减法可以自动识别正负情况
+		BigInt ret = Myb - Mya;
+		return ret;
+	}
+	//a是正的，b是负的  a-(-b)=a+b
+	if (!a.minus && b.minus) {
+		BigInt Mya(a); Mya.minus = false;
+		BigInt Myb(b); Myb.minus = false;
+		BigInt ret = Mya + Myb;
+		return ret;
+	}
+	//a是负的，b是正的  -a-b=-(a+b)
+	if (a.minus && !b.minus) {
+		BigInt Mya(a); Mya.minus = false;
+		BigInt Myb(b); Myb.minus = false;
+		BigInt ret = Mya + Myb;
+		ret.minus = true;
+		return ret;
+	}
+	//都是正的的情况
 	BigInt bi(b);
 	if (a >= b) {
 		if (a.num.size() > b.num.size()) {
@@ -234,13 +290,13 @@ BigInt operator-(const BigInt& a, const BigInt& b) {
 		int s = vii.size();
 		if (vii.empty()) { vii.push_back(0); }
 		BigInt ret(s, vii);
+		ret.minus = false;
 		return ret;
 	}
 	else {
-		cout << "非法的减法" << endl;
-		//待增加标志
-		bi.num.clear();
-		return bi;
+		BigInt ret = b - a;
+		ret.minus = true;
+		return ret;
 	}
 }
 
@@ -258,12 +314,14 @@ BigInt operator*(const BigInt& a, const BigInt& b) {
 			ret = ret + b;
 		}
 	}
+	if ((a.minus && b.minus)||(!a.minus&&!b.minus)) { ret.minus = false; }
+	else { ret.minus = true; }
 	return ret;
 }
 
 BigInt operator/(const BigInt& a, const BigInt& b) {
 	if (a < b) {
-		cout << "非法的乘法，被除数小于除数" << endl;
+		cout << "非法的除法，被除数小于除数" << endl;
 		BigInt bi;
 		return bi;
 	}
@@ -296,6 +354,8 @@ BigInt operator/(const BigInt& a, const BigInt& b) {
 	}
 	reverse(vi.begin(), vi.end());
 	BigInt ret(vi.size(), vi);
+	if ((a.minus && b.minus) || (!a.minus && !b.minus)) { ret.minus = false; }
+	else { ret.minus = true; }
 	return ret;
 }
 
@@ -388,8 +448,47 @@ BigInt pow(BigInt& a, BigInt& b,BigInt& m) {
 	}
 	return Mya;
 }
+//用来存储已经计算好的阶
+//一定要注意，在外部调用quickPow之前一定要清空store一次
+BigInt quickPow(BigInt& a, BigInt& b, BigInt& m) {
+	cout << "b=" << b << endl;
+	//他其实需要做的就只是调度
+	vector<int>vi2; vi2.push_back(1); vi2.push_back(0);
+	BigInt TWO(2, vi2);
+	vector<int>vi1; vi1.push_back(1);
+	BigInt ONE(1, vi1);
+	//如果是2次方直接计算
+	if (b == TWO) { 
+		BigInt ret;
+		ret = pow(a, b, m);
+		return ret; 
+	}
+	//一次方直接返回
+	if (b == ONE) {
+		return a;
+	}
+	//偶数次方
+	if (b.num[b.num.size() - 1] == 0) {
+		BigInt ret;
+		BigInt t = b / TWO;
+		BigInt Mya = (a * a)%m;
+		ret = quickPow(Mya, t, m);//转而计算a^2的b/2次方
+		return ret;
 
-
+	}
+	//奇数次方
+	else {
+		BigInt ret;
+		BigInt t = b / TWO;
+		BigInt Mya = (a * a)%m;
+		ret = quickPow(Mya, t, m);//转而计算a^2的b/2次方
+		ret = (ret * a) % m;//因为是奇数所以还要再乘一个a
+		return ret;
+	}
+}
+BigInt MyquickPow(BigInt& a, BigInt& b, BigInt& m) {
+	return quickPow(a, b, m);
+}
 
 bool Miller_Rabin(BigInt b,int k) {
 	if (b.num[b.num.size() - 1] == 0) { return false; }
@@ -422,10 +521,10 @@ bool Miller_Rabin(BigInt b,int k) {
 		BigInt bb;
 		Sleep(1000);
 		bb.randGenerate(b);
-		cout << "bb= " << bb << endl;
+		cout << "bb=" << bb << endl;
 		for (int i = 0; i < s; i++) {
 			if (i == 0) {
-				r = pow(bb, t, b);
+				r = MyquickPow(bb, t, b);
 				if (r == ONE) { break; }
 				BigInt check = b - ONE;
 				if (r == check) { break; }
@@ -433,7 +532,7 @@ bool Miller_Rabin(BigInt b,int k) {
 				continue;
 			}
 			else {
-				r = pow(r, TWO, b);
+				r = MyquickPow(r, TWO, b);
 				BigInt check = b - ONE;
 				if (r == check) { break; }
 				if (i == s - 1) { cout << "fail to pass Miller_Rabin"<<endl; return false; }
@@ -443,4 +542,66 @@ bool Miller_Rabin(BigInt b,int k) {
 	}
 	cout << "pass Miller_Rabin successfully" << endl;
 	return true;
+}
+
+//ll exgcd(ll a, ll b, ll& x, ll& y) {
+//	if (b == 0) {
+//		x = 1;
+//		y = 0;
+//		return a;
+//	}
+//	ll r = exgcd(b, a % b, x, y);
+//	ll temp = x;//x,y往上回溯 
+//	x = y;
+//	y = (temp - (a / b) * y);
+//	return r;//r 为最大公约数 
+//}
+
+BigInt extendEuqlid(BigInt a, BigInt b, BigInt& x, BigInt& y) {
+	vector<int>vi1; vi1.push_back(1);
+	BigInt ONE(1, vi1);
+	vector<int>vi0; vi0.push_back(0);
+	BigInt ZERO(1, vi0);
+	if(b.num.size()==0){
+		x = ONE;
+		y = ZERO;
+		return a;
+	}
+	BigInt r = extendEuqlid(b, a % b, x, y);
+	BigInt temp = x;
+	x = y;
+	y = (temp - (a / b) * y);
+	return r;
+}
+
+//inline int gcd(int a, int b) {
+//	int r;
+//	while (b > 0) {
+//		r = a % b;
+//		a = b;
+//		b = r;
+//	}
+//	return a;
+//}
+
+BigInt Euqlid(BigInt a, BigInt b) {
+	BigInt r;
+	while (b.num.size() > 0) {
+		r = a % b;
+		a = b;
+		b = r;
+	}
+	return a;
+}
+
+//求解a满足：ax=1（mod b）也就是a关于b的乘法逆元
+BigInt MyextendEuqlid(BigInt a, BigInt b) {
+	BigInt x;
+	BigInt y;
+	extendEuqlid(a, b, x, y);
+	//x是最后的结果
+	while (x.minus == true) {
+		x = x + b;
+	}
+	return x;
 }
