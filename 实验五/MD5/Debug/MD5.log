@@ -1,0 +1,12 @@
+﻿  源.cpp
+G:\code\cryptology\实验五\MD5\MD5.h(8,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(33,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(40,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(47,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(63,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(72,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(95,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(253,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(262,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\实验五\MD5\MD5.h(290): warning C4715: “myMD5::getWord”: 不是所有的控件路径都返回值
+  MD5.vcxproj -> G:\code\cryptology\实验五\MD5\Debug\MD5.exe
