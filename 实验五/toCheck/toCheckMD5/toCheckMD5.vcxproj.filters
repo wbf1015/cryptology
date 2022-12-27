@@ -19,12 +19,4 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="MD5.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="other.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>
