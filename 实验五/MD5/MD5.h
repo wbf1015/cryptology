@@ -593,3 +593,15 @@ void step(int q, int round, int i,myMD5 &m) {
     cout << Bin2Hex(registerD) << endl;
     cout << "------------------------------------------------------------------------" << endl;
 }
+
+int stringDiff(string a, string b) {
+    if (a.size() != 128 || b.size() != 128) {
+        cout << "错误的字符串比较输入" << endl;
+        return 0;
+    }
+    int ret=0;
+    for (int i = 0; i < 128; i++) {
+        if (a[i] != b[i]) { ret++; }
+    }
+    return ret;
+}

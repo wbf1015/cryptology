@@ -1,0 +1,5 @@
+﻿  main.cpp
+G:\code\cryptology\实验四\others\ToHelpRSA\bigint.h(311,64): warning C4293: “<<”: Shift 计数为负或过大，其行为未定义
+G:\code\cryptology\实验四\others\ToHelpRSA\bigint.h(359,64): warning C4293: “<<”: Shift 计数为负或过大，其行为未定义
+G:\code\cryptology\实验四\others\ToHelpRSA\bigint.h(780,16): warning C4018: “<=”: 有符号/无符号不匹配
+  ToHelpRSA.vcxproj -> G:\code\cryptology\实验四\others\ToHelpRSA\Debug\ToHelpRSA.exe

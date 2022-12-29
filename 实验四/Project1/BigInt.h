@@ -43,6 +43,7 @@ public:
 		bool ret = a >= b;
 		return !ret;
 	}
+	
 
 
 	//其他功能性函数
@@ -55,6 +56,7 @@ public:
 	void generateNum(int size);//随机生成一个数
 	void generateOdd(int size);
 	void randGenerate(BigInt& n);
+	void equal(BigInt& b);
 };
 
 //重载输出运算符
@@ -321,7 +323,7 @@ BigInt operator*(const BigInt& a, const BigInt& b) {
 
 BigInt operator/(const BigInt& a, const BigInt& b) {
 	if (a < b) {
-		cout << "非法的除法，被除数小于除数" << endl;
+		//cout << "非法的除法，被除数小于除数" << endl;
 		BigInt bi;
 		return bi;
 	}
@@ -428,6 +430,14 @@ L:
 	}
 }
 
+void BigInt::equal(BigInt& b) {
+	this->minus = b.minus;
+	this->num.clear();
+	for (int i = 0; i < b.num.size(); i++) {
+		this->num.push_back(b.num[i]);
+	}
+}
+
 BigInt pow(BigInt& a, BigInt& b,BigInt& m) {
 	vector<int>vi;
 	vi.push_back(1);
@@ -451,7 +461,7 @@ BigInt pow(BigInt& a, BigInt& b,BigInt& m) {
 //用来存储已经计算好的阶
 //一定要注意，在外部调用quickPow之前一定要清空store一次
 BigInt quickPow(BigInt& a, BigInt& b, BigInt& m) {
-	cout << "b=" << b << endl;
+	//cout << "b=" << b << endl;
 	//他其实需要做的就只是调度
 	vector<int>vi2; vi2.push_back(1); vi2.push_back(0);
 	BigInt TWO(2, vi2);
@@ -521,7 +531,7 @@ bool Miller_Rabin(BigInt b,int k) {
 		BigInt bb;
 		Sleep(1000);
 		bb.randGenerate(b);
-		cout << "bb=" << bb << endl;
+		//cout << "bb=" << bb << endl;
 		for (int i = 0; i < s; i++) {
 			if (i == 0) {
 				r = MyquickPow(bb, t, b);
@@ -604,4 +614,123 @@ BigInt MyextendEuqlid(BigInt a, BigInt b) {
 		x = x + b;
 	}
 	return x;
+}
+
+BigInt generatePrime(int i) {
+	BigInt b(i);
+	b.generateOdd(i);
+	vector<int>vi;
+	vi.push_back(1); vi.push_back(0);
+	BigInt TWO(2, vi);
+	while (true) {
+		if (Miller_Rabin(b, 5)) { return b; }
+		else {
+			b = b + TWO;
+		}
+	}
+}
+BigInt generategcd_1(BigInt& bi) {
+	BigInt b(bi.num.size()/2);
+	b.generateOdd(bi.num.size() / 2);
+	vector<int>vi2; vi2.push_back(1);
+	BigInt ONE(1, vi2);
+	while (true) {
+		if (b >= bi) {
+			cout << "计算互素值失败" << endl;
+			return ONE;
+		}
+		if (Euqlid(b, bi) == ONE) {
+			return b;
+		}
+		else {
+			b = b + ONE;
+		}
+	}
+}
+
+BigInt string2BigInt(string s) {
+	vector<int>vi;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '0') { vi.push_back(0); vi.push_back(0); vi.push_back(0); vi.push_back(0); continue; }
+		if (s[i] == '1') { vi.push_back(0); vi.push_back(0); vi.push_back(0); vi.push_back(1); continue; }
+		if (s[i] == '2') { vi.push_back(0); vi.push_back(0); vi.push_back(1); vi.push_back(0); continue; }
+		if (s[i] == '3') { vi.push_back(0); vi.push_back(0); vi.push_back(1); vi.push_back(1); continue; }
+		if (s[i] == '4') { vi.push_back(0); vi.push_back(1); vi.push_back(0); vi.push_back(0); continue; }
+		if (s[i] == '5') { vi.push_back(0); vi.push_back(1); vi.push_back(0); vi.push_back(1); continue; }
+		if (s[i] == '6') { vi.push_back(0); vi.push_back(1); vi.push_back(1); vi.push_back(0); continue; }
+		if (s[i] == '7') { vi.push_back(0); vi.push_back(1); vi.push_back(1); vi.push_back(1); continue; }
+		if (s[i] == '8') { vi.push_back(1); vi.push_back(0); vi.push_back(0); vi.push_back(0); continue; }
+		if (s[i] == '9') { vi.push_back(1); vi.push_back(0); vi.push_back(0); vi.push_back(1); continue; }
+		if (s[i] == 'A'|| s[i] == 'a') { vi.push_back(1); vi.push_back(0); vi.push_back(1); vi.push_back(0); continue; }
+		if (s[i] == 'B'|| s[i] == 'b') { vi.push_back(1); vi.push_back(0); vi.push_back(1); vi.push_back(1); continue; }
+		if (s[i] == 'C'|| s[i] == 'c') { vi.push_back(1); vi.push_back(1); vi.push_back(0); vi.push_back(0); continue; }
+		if (s[i] == 'D'|| s[i] == 'd') { vi.push_back(1); vi.push_back(1); vi.push_back(0); vi.push_back(1); continue; }
+		if (s[i] == 'E'|| s[i] == 'e') { vi.push_back(1); vi.push_back(1); vi.push_back(1); vi.push_back(0); continue; }
+		if (s[i] == 'F'|| s[i] == 'f') { vi.push_back(1); vi.push_back(1); vi.push_back(1); vi.push_back(1); continue; }
+	}
+	BigInt b(vi.size(), vi);
+	return b;
+}
+BigInt string2BigInt2(string s) {
+	vector<int>vi;
+	for(int i=0;i<s.size();i++){
+		if (s[i] == '0') { vi.push_back(0); }
+		else { vi.push_back(1); }
+	}
+	BigInt bi(vi.size(), vi);
+	return bi;
+}
+string Dec2Bin(int i) {
+	vector<int>vi;
+	unsigned long long int myi = i;
+	while (myi != 0) {
+		vi.push_back(myi % 2);
+		myi = myi / 2;
+	}
+	reverse(vi.begin(), vi.end());
+	string s;
+	for (int i = 0; i < vi.size(); i++) {
+		if (vi[i] == 0) { s.append(string(1, '0')); }
+		else { s.append(string(1, '1')); }
+	}
+	return s;
+}
+string string2Bin(string s) {
+	string ret;
+	for (int i = 0; i < s.size(); i++) {
+		int k = s[i];
+		string temp = Dec2Bin(k);
+		ret.append(temp);
+	}
+	return ret;
+}
+vector<BigInt>Prime512;
+void InitialPrime512() {
+	string s1 = "B49700D49696726058F2506BAF6860981E4F097B89CF5540FB07A3CDEB9BDCC3";
+	string s2 = "DE9AE262BBFA557E9EF55E9D165B43E6F859803F4AC929FAE9680325BA295513";
+	string s3 = "A14A46D62943712797385A7259AD68FAE4110C83DBFD75AFAED7AC3B52F4308B";
+	string s4 = "A7BBD5BD2F177E7BAEB89DB47196F7640C8ED51F62ED6961BF5726877FF06A53";
+	string s5 = "B87E37FE315B0F4CC722BB0F815A184EA27FAB85119BFDD8A45DD98643926D1B";
+	string s6 = "8233A8BA28A6F782A7A70AFD7AE05808AE0F812515DBD75CEE2EB0967E7FA063";
+	Prime512.push_back(string2BigInt(s1));
+	Prime512.push_back(string2BigInt(s2));
+	Prime512.push_back(string2BigInt(s3));
+	Prime512.push_back(string2BigInt(s4));
+	Prime512.push_back(string2BigInt(s5));
+	Prime512.push_back(string2BigInt(s6));
+}
+vector<BigInt>Prime256;
+void IntialPrime256() {
+	string s1 = "DB92BF308AF4895A7EF3E3FCD7290853";
+	string s2 = "F4D7A6FF616582E7A18FDA48A5B6A303";
+	string s3 = "AD49678F3DBA34AA8789350E9FA3FE5B";
+	string s4 = "D711D47AEF9F9471FF9C7DFCD1DCC18B";
+	string s5 = "C502F81D0180027EE578EC5AF5C67EE3";
+	string s6 = "C2C899D5EA7E21517C42C9AB5104BA83";
+	Prime256.push_back(string2BigInt(s1));
+	Prime256.push_back(string2BigInt(s2));
+	Prime256.push_back(string2BigInt(s3));
+	Prime256.push_back(string2BigInt(s4));
+	Prime256.push_back(string2BigInt(s5));
+	Prime256.push_back(string2BigInt(s6));
 }
