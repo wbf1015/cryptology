@@ -34,6 +34,7 @@ void initalNeeded() {
     bind(mySocket, (SOCKADDR*)&my_addr, sizeof(my_addr));
 }
 
+//就是一个框架而已
 DWORD WINAPI myreceive(LPVOID p) {
     char* Recvbuffer = new char[100000];
     while (true) {
@@ -48,6 +49,7 @@ DWORD WINAPI myreceive(LPVOID p) {
     }
 }
 
+//只是代表一个框架
 DWORD WINAPI mysend(LPVOID p) {
     char* sendbuffer = new char[100000];
     while (true) {
