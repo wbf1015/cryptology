@@ -116,12 +116,12 @@ string Hex2Binary(char c) {
 	if (c == '7') { return "0111"; }
 	if (c == '8') { return "1000"; }
 	if (c == '9') { return "1001"; }
-	if (c == 'a') { return "1010"; }
-	if (c == 'b') { return "1011"; }
-	if (c == 'c') { return "1100"; }
-	if (c == 'd') { return "1101"; }
-	if (c == 'e') { return "1110"; }
-	if (c == 'f') { return "1111"; }
+	if (c == 'a'||c=='A') { return "1010"; }
+	if (c == 'b'||c=='B') { return "1011"; }
+	if (c == 'c'||c=='C') { return "1100"; }
+	if (c == 'd'||c=='D') { return "1101"; }
+	if (c == 'e'||c=='E') { return "1110"; }
+	if (c == 'f'||c=='F') { return "1111"; }
 }
 
 void printCStar(char* c, int start, int end) {
@@ -138,11 +138,24 @@ void CStar2HEX(char* c, int start, int end) {
 		s.push_back(c[i + 1]);
 		s.push_back(c[i + 2]);
 		s.push_back(c[i + 3]);
-		cout << Binary2Hex(s);
+		//cout << Binary2Hex(s);
 		count++;
 		if (count % 4 == 0) { cout << ","; }
 	}
 	cout << endl;
+}
+string GetCstarHex(char* c, int start, int end) {
+	string ret;
+	for (int i = start; i < end; i += 4) {
+		string s = "";
+		s.push_back(c[i]);
+		s.push_back(c[i + 1]);
+		s.push_back(c[i + 2]);
+		s.push_back(c[i + 3]);
+		//cout << Binary2Hex(s);
+		ret.push_back(Binary2Hex(s));
+	}
+	return ret;
 }
 int findDifference(char* c1, char* c2, int start, int end) {
 	int count = 0;
@@ -321,7 +334,7 @@ void gettext(TestData1 td) {
 	string s = td.text;
 	int count = 1;
 	for (int i = 0; i < s.length(); i++) {
-		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102) || (s[i] >= 65 && s[i] <= 70)) {
 			string t = Hex2Binary(s[i]);
 			for (int j = 0; j < 4; j++) {
 				text[count++] = t[j];
@@ -336,7 +349,7 @@ void getkey(TestData1 td) {
 	string s = td.key;
 	int count = 1;
 	for (int i = 0; i < s.length(); i++) {
-		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102) || (s[i] >= 65 && s[i] <= 70)) {
 			string t = Hex2Binary(s[i]);
 			for (int j = 0; j < 4; j++) {
 				key[count++] = t[j];
@@ -351,7 +364,7 @@ void getout(TestData1 td) {
 	string s = td.out;
 	int count = 1;
 	for (int i = 0; i < s.length(); i++) {
-		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102)) {
+		if ((s[i] >= 48 && s[i] <= 57) || (s[i] >= 97 && s[i] <= 102) || (s[i] >= 65 && s[i] <= 70)) {
 			string t = Hex2Binary(s[i]);
 			for (int j = 0; j < 4; j++) {
 				text[count++] = t[j];
@@ -1081,12 +1094,212 @@ void Interaction() {
 	cout << "感谢您的使用" << endl;
 }
 
+string OriginKey = "2b7e151628aed2a6abf7158809cf4f3c";
+string AppendStringzero(string s) {
+	string ss = s;
+	while (ss.size() < 32) {
+		ss.push_back('0');
+	}
+	return ss;
+}
+string AppendStringdh(string s) {
+	string ret = "";
+	for (int i = 0; i < s.size(); i+=4) {
+		string t = s.substr(0, 4);
+		t.push_back('，');
+		ret.append(t);
+	}
+	ret.pop_back();
+	return ret;
+}
+string Hex2Bin(string s) {
+	string ret;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '0') { ret.append("0000"); }
+		if (s[i] == '1') { ret.append("0001"); }
+		if (s[i] == '2') { ret.append("0010"); }
+		if (s[i] == '3') { ret.append("0011"); }
+		if (s[i] == '4') { ret.append("0100"); }
+		if (s[i] == '5') { ret.append("0101"); }
+		if (s[i] == '6') { ret.append("0110"); }
+		if (s[i] == '7') { ret.append("0111"); }
+		if (s[i] == '8') { ret.append("1000"); }
+		if (s[i] == '9') { ret.append("1001"); }
+		if (s[i] == 'a' || s[i] == 'A') { ret.append("1010"); }
+		if (s[i] == 'b' || s[i] == 'B') { ret.append("1011"); }
+		if (s[i] == 'c' || s[i] == 'C') { ret.append("1100"); }
+		if (s[i] == 'd' || s[i] == 'D') { ret.append("1101"); }
+		if (s[i] == 'e' || s[i] == 'E') { ret.append("1110"); }
+		if (s[i] == 'f' || s[i] == 'F') { ret.append("1111"); }
+	}
+	return ret;
+}
+string Bin2Hex(string s) {
+	if (s.size() % 4 != 0) {
+		reverse(s.begin(), s.end());
+		for (int i = 1; i <= 4 - (s.size() % 4); i++) {
+			s.append(string(1, '0'));
+		}
+		reverse(s.begin(), s.end());
+	}
+	string ret;
+	for (int i = 0; i < s.size(); i += 4) {
+		if (s[i] == '0' && s[i + 1] == '0' && s[i + 2] == '0' && s[i + 3] == '0') { ret.append(string(1, '0')); continue; }
+		if (s[i] == '0' && s[i + 1] == '0' && s[i + 2] == '0' && s[i + 3] == '1') { ret.append(string(1, '1')); continue; }
+		if (s[i] == '0' && s[i + 1] == '0' && s[i + 2] == '1' && s[i + 3] == '0') { ret.append(string(1, '2')); continue; }
+		if (s[i] == '0' && s[i + 1] == '0' && s[i + 2] == '1' && s[i + 3] == '1') { ret.append(string(1, '3')); continue; }
+		if (s[i] == '0' && s[i + 1] == '1' && s[i + 2] == '0' && s[i + 3] == '0') { ret.append(string(1, '4')); continue; }
+		if (s[i] == '0' && s[i + 1] == '1' && s[i + 2] == '0' && s[i + 3] == '1') { ret.append(string(1, '5')); continue; }
+		if (s[i] == '0' && s[i + 1] == '1' && s[i + 2] == '1' && s[i + 3] == '0') { ret.append(string(1, '6')); continue; }
+		if (s[i] == '0' && s[i + 1] == '1' && s[i + 2] == '1' && s[i + 3] == '1') { ret.append(string(1, '7')); continue; }
+		if (s[i] == '1' && s[i + 1] == '0' && s[i + 2] == '0' && s[i + 3] == '0') { ret.append(string(1, '8')); continue; }
+		if (s[i] == '1' && s[i + 1] == '0' && s[i + 2] == '0' && s[i + 3] == '1') { ret.append(string(1, '9')); continue; }
+		if (s[i] == '1' && s[i + 1] == '0' && s[i + 2] == '1' && s[i + 3] == '0') { ret.append(string(1, 'A')); continue; }
+		if (s[i] == '1' && s[i + 1] == '0' && s[i + 2] == '1' && s[i + 3] == '1') { ret.append(string(1, 'B')); continue; }
+		if (s[i] == '1' && s[i + 1] == '1' && s[i + 2] == '0' && s[i + 3] == '0') { ret.append(string(1, 'C')); continue; }
+		if (s[i] == '1' && s[i + 1] == '1' && s[i + 2] == '0' && s[i + 3] == '1') { ret.append(string(1, 'D')); continue; }
+		if (s[i] == '1' && s[i + 1] == '1' && s[i + 2] == '1' && s[i + 3] == '0') { ret.append(string(1, 'E')); continue; }
+		if (s[i] == '1' && s[i + 1] == '1' && s[i + 2] == '1' && s[i + 3] == '1') { ret.append(string(1, 'F')); continue; }
+	}
+	return ret;
+}
+//模2^32次方的加法，而且限定a b必须是32位的
+//所以说有进位直接舍弃就可以了
+string stringADD(string a, string b) {
+	if (a.size() != 128 || b.size() != 128) {
+		cout << "非法的加法" << endl;
+		string s;
+		return s;
+	}
+	string mya(a);
+	string myb(b);
+	string ret;
+	for (int i = 0; i < 128; i++) {
+		if (mya[i] == '0' && myb[i] == '0') { ret.push_back('0'); continue; }
+		if (mya[i] == '0' && myb[i] == '1') { ret.push_back('1'); continue; }
+		if (mya[i] == '1' && myb[i] == '0') { ret.push_back('1'); continue; }
+		if (mya[i] == '1' && myb[i] == '1') { ret.push_back('0'); continue; }
+	}
+	return ret;
+}
 
-int main() {
-	//encrypt(td2);
-	//printCStar(text, 1, 129);
-	//decrypt(td2);
-	//printCStar(text, 1, 129);
-	//CStar2HEX(text, 1, 129);
-	Interaction();
+//传进来要加密的16进制字符串
+string useAESencrypt(string s) {
+	if (s.size() <= 32) {
+		if (s.size() < 32) {
+			s = AppendStringzero(s);
+		}
+		//到这为止生成了一个128位的数，现在把逗号加上
+		//s = AppendStringdh(s);
+		string keys = OriginKey;
+		cout << "只需要一次加密即可" << endl;
+		cout << "明文为" << s << endl;
+		cout << "密钥为" << keys << endl;
+		cout << keys << endl;
+		TestData1 mytd(128, 128, s, keys);
+		encrypt(mytd);
+		string ret = GetCstarHex(text, 1, 129);
+		cout << "加密结果为" << ret << endl;
+		return ret;
+	}
+	else {
+		vector<string>vs;
+		string ret="";
+		string lastsecret = "";
+		string keynow = OriginKey;
+		//切割
+		for(int i=0;i<s.size();i+=32){
+			string temp = s.substr(i, 32);
+			vs.push_back(temp);
+		}
+		//填零
+		for (int i = 0; i < vs.size(); i++) {
+			vs[i] = AppendStringzero(vs[i]);
+		}
+		cout << "需要" << vs.size() << "次加密" << endl;
+		for (int i = 0; i < vs.size(); i++) {
+			if (i == 0) {
+				cout << "第一次加密明文为" << vs[i] << endl;
+				cout << "第一次加密密钥为" << keynow << endl;
+				TestData1 mytd(128, 128, vs[i], keynow);
+				encrypt(mytd);
+				//加密后的成为了temp
+				string temp = GetCstarHex(text, 1, 129);
+				cout << "第一次加密密文为" << temp << endl;
+				ret.append(temp);
+				lastsecret = temp;
+			}
+			else {
+				//CBC
+				string a = Hex2Bin(vs[i]);
+				string b = Hex2Bin(lastsecret);
+				string t = stringADD(a, b);
+				t = Bin2Hex(t);
+				cout << "第" << i + 1 << "次加密明文为" << t << endl;
+				cout << "第" << i + 1 << "次加密密钥为" << keynow << endl;
+				TestData1 mytd(128, 128, t, keynow);
+				encrypt(mytd);
+				//加密后的成为了temp
+				string temp = GetCstarHex(text, 1, 129);
+				cout << "第" << i + 1 << "次加密结果为" << temp << endl;
+				ret.append(temp);
+				lastsecret = temp;
+			}
+		}
+		return ret;
+	}
+}
+string useAESdecrypt(string s) {
+	if (s.size() <= 32) {
+		if (s.size() < 32) {
+			s = AppendStringzero(s);
+		}
+		string keys = OriginKey;
+		cout << s << endl;
+		cout << keys << endl;
+		memset(text, 0, 129);
+		memset(key, 0, 129);
+		TestData1 mytd(128, 128,s,keys,s);
+		decrypt(mytd);
+		string ret = GetCstarHex(text, 1, 129);
+		cout << "只需要一次解密即可" << endl;
+		cout << "密文为" << s << endl;
+		cout << "密钥为" << keys << endl;
+		cout << "解密后明文为" << ret << endl;
+		return ret;
+	}
+	else {
+		vector<string>vs;
+		string ret;
+		for (int i = 0; i < s.size(); i+=32) {
+			string temp = s.substr(i, 32);
+			vs.push_back(temp);
+		}
+		cout << "需要" << vs.size() << "次解密" << endl;
+		for(int i=0;i<vs.size();i++){
+			if (i == 0) {
+				TestData1 mytd(128, 128, vs[i], OriginKey, vs[i]);
+				decrypt(mytd);
+				string temp = GetCstarHex(text, 1, 129);
+				cout << "第" << i + 1 << "次密文为" << vs[i] << endl;
+				cout << "第" << i + 1 << "次密钥为" << OriginKey << endl;
+				cout << "第" << i + 1 << "次明文为" << temp << endl;
+				ret.append(temp);
+			}
+			else {
+				TestData1 mytd(128, 128, vs[i], OriginKey, vs[i]);
+				decrypt(mytd);
+				string temp = GetCstarHex(text, 1, 129);
+				string a = Hex2Bin(temp);
+				string b = Hex2Bin(vs[i - 1]);
+				string t = stringADD(a, b);
+				t = Bin2Hex(t);
+				cout << "第" << i + 1 << "次密文为" << vs[i] << endl;
+				cout << "第" << i + 1 << "次密钥为" << OriginKey << endl;
+				cout << "第" << i + 1 << "次明文为" << t << endl;
+				ret.append(t);
+			}
+		}
+		return ret;
+	}
 }

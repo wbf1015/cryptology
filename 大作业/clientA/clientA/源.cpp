@@ -1,6 +1,8 @@
 #include"BigInt.h"
 #include"RSA.h"
 #include"socket.h"
+#include"dealFile.h"
+#include"AES.h"
 using namespace std;
 string N1 = "0";
 string N2 = "1";
@@ -108,9 +110,21 @@ int allocKey() {
 }
 
 int main() {
-	initalNeeded();//初始化socket什么的
-	allocKey();
+	//initalNeeded();//初始化socket什么的
+	//allocKey();
 	
+	//string s=readFile();
+	//cout << s;
+
+	string s = useAESencrypt("3243f6a8885a308d313198a2e03707345678abcd");
+	cout << "最终密文为";
+	cout << s << endl;
+	s = useAESdecrypt(s);
+	cout << "最终明文为";
+	cout << s << endl;
+
+	//Interaction();
+
 	//myRSA();
 
 	/*string s = encrypt_B_public("A1");
