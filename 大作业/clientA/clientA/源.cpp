@@ -113,15 +113,15 @@ int main() {
 	//initalNeeded();//初始化socket什么的
 	//allocKey();
 	
-	//string s=readFile();
-	//cout << s;
+	string s=readFile();
+	WriteFile(s);
 
-	string s = useAESencrypt("3243f6a8885a308d313198a2e03707345678abcd");
-	cout << "最终密文为";
-	cout << s << endl;
-	s = useAESdecrypt(s);
-	cout << "最终明文为";
-	cout << s << endl;
+	//string s = useAESencrypt("3243f6a8885a308d313198a2e03707345678abcd");
+	//cout << "最终密文为";
+	//cout << s << endl;
+	//s = useAESdecrypt(s);
+	//cout << "最终明文为";
+	//cout << s << endl;
 
 	//Interaction();
 

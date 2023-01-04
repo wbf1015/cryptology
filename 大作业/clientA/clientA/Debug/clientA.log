@@ -40,6 +40,8 @@ G:\code\cryptology\大作业\clientA\clientA\RSA.h(254,14): warning C4018: “>=
 G:\code\cryptology\大作业\clientA\clientA\RSA.h(259,21): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\RSA.h(285,21): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\RSA.h(330,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\dealFile.h(32,23): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\dealFile.h(74,20): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\AES.h(198,29): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
 G:\code\cryptology\大作业\clientA\clientA\AES.h(244,20): warning C4018: “<=”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\AES.h(245,9): warning C4018: “<=”: 有符号/无符号不匹配
