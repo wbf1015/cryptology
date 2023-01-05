@@ -1,11 +1,13 @@
 #include"BigInt.h"
 #include"RSA.h"
 #include"socket.h"
+#include"AES.h"
+#include"dealFile.h"
 using namespace std;
 string N1 = "0";
 string N2 = "1";
 string IDA = "A";
-string AESKey;
+string AESKey="2b7e151628aed2a6abf7158809cf4f3c";
 string cleanString(string s) {
 	int end=s.size()-1;
 	for (int i = 0; i < s.size(); i++) {
@@ -114,9 +116,57 @@ int AllocKey() {
 	AESKey.append(temp2);
 	cout << "AESKey接收完毕:" << AESKey << endl;
 }
-int main() {
+void realmain() {
 	initalNeeded();//初始化socket什么的
-	AllocKey();
+	//AllocKey();
+	cout << "请选择您是收方还是发方：\n 输入1代表发方，输入2代表收方" << endl;
+	int c1; cin >> c1;
+	if (c1 == 1) {
+		string s = readFile();
+		s = useAESencrypt(s, AESKey);
+		char* sendbuffer = new char[10000];
+		memcpy(sendbuffer, s.c_str(), s.size());
+		cout << "请先确认接收端成功开启，如果接收端成功开启，请输入1\n 输入后将立即发送消息\n请务必确保接收端已经正确选择“接收模式”" << endl;
+		int i = 0; while (i != 1) {
+			cin >> i;
+		}
+		sendto(mySocket, sendbuffer, s.size(), 0, (sockaddr*)&oppo_addr, olen);
+		cout << "发送成功" << endl;
+		while (true) {
+
+		}
+		return;
+	}
+	if (c1 == 2) {
+		char* recvbuffer = new char[10000];
+		memset(recvbuffer, 0, 10000);
+		cout << "客户端准备完成" << endl;
+		while (recvfrom(mySocket, recvbuffer, 10000, 0, (sockaddr*)&oppo_addr, &olen) <= 0) {
+			//cout << "here" << endl;
+		}
+		string s(recvbuffer);
+		s = cleanZero(s);
+		cout << "s1=" << s << endl;
+		s = useAESdecrypt(s, AESKey);
+		cout << "s2=" << s << endl;
+		WriteFile(s);
+		cout << "保存成功" << endl;
+		while (true) {
+
+		}
+		return; 
+	}
+	cout << "错误的输入" << endl;
+}
+int main() {
+	//initalNeeded();//初始化socket什么的
+	//AllocKey();
+
+	/*string s = readFile();
+	s = useAESencrypt(s,AESKey);
+	s = useAESdecrypt(s,AESKey);
+	WriteFile(s);*/
+	realmain();
 	
 	/*string s = decrypt_B_private("959B19486DFC11EB6EB62EE3993EEA4F");
 	cout << s << endl;*/

@@ -17,6 +17,7 @@ string cleanString(string s) {
 }
 int allocKey() {
 	int check;
+	cout << "您是AES密钥的分配者，请保证对方成功上线后再进行输入" << endl;
 	cout << "请在开启客户端B后输入：1，之后将开始交换密钥" << endl;
 	cin >> check;
 	if (check != 1) { return -1; }
@@ -108,13 +109,58 @@ int allocKey() {
 	memcpy(sendbuffer, last.c_str(), last.size());
 	sendto(mySocket, sendbuffer, 10000, 0, (sockaddr*)&oppo_addr, olen);
 }
+void realmain() {
+	initalNeeded();//初始化socket什么的
+	//allocKey();
+	cout << "请选择您是收方还是发方：\n 输入1代表发方，输入2代表收方" << endl;
+	int c1; cin >> c1;
+	if (c1 == 1) {
+		string s = readFile();
+		s = useAESencrypt(s);
+		char* sendbuffer = new char[10000];
+		memcpy(sendbuffer, s.c_str(), s.size());
+		cout << "请先确认接收端成功开启，如果接收端成功开启，请输入1\n 输入后将立即发送消息\n请务必确保接收端已经正确选择“接收模式”" << endl;
+		int i = 0; while (i != 1) {
+			cin >> i;
+		}
+		int e=sendto(mySocket, sendbuffer, s.size(), 0, (sockaddr*)&oppo_addr, olen);
+		cout << e << endl;
+		cout << WSAGetLastError() << endl;
+		cout << "发送成功" << endl;
+		while (true) {
 
+		}
+		return;
+	}
+	if (c1 == 2) {
+		char* recvbuffer = new char[10000];
+		memset(recvbuffer, 0, 10000);
+		cout << "客户端准备完成" << endl;
+		while (recvfrom(mySocket, recvbuffer, 10000, 0, (sockaddr*)&oppo_addr, &olen) <= 0) {
+
+		}
+		cout << "here" << endl;
+		string s(recvbuffer);
+		s = cleanZero(s);
+		s = useAESdecrypt(s);
+		WriteFile(s);
+		cout << "保存成功" << endl;
+		while (true) {
+
+		}
+		return;
+	}
+	cout << "错误的输入" << endl;
+}
 int main() {
+	realmain();
 	//initalNeeded();//初始化socket什么的
 	//allocKey();
 	
-	string s=readFile();
-	WriteFile(s);
+	//string s=readFile();
+	//s= useAESencrypt(s);
+	//s = useAESdecrypt(s);
+	//WriteFile(s);
 
 	//string s = useAESencrypt("3243f6a8885a308d313198a2e03707345678abcd");
 	//cout << "最终密文为";

@@ -64,13 +64,13 @@ G:\code\cryptology\大作业\clientA\clientA\AES.h(1220,21): warning C4018: “<
 G:\code\cryptology\大作业\clientA\clientA\AES.h(1274,21): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\AES.h(1279,16): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\源.cpp(13,20): warning C4018: “<”: 有符号/无符号不匹配
-G:\code\cryptology\大作业\clientA\clientA\源.cpp(72,11): warning C4018: “<”: 有符号/无符号不匹配
-G:\code\cryptology\大作业\clientA\clientA\源.cpp(76,20): warning C4018: “<”: 有符号/无符号不匹配
-G:\code\cryptology\大作业\clientA\clientA\源.cpp(92,11): warning C4018: “<”: 有符号/无符号不匹配
-G:\code\cryptology\大作业\clientA\clientA\源.cpp(96,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\源.cpp(73,11): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\源.cpp(77,20): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\源.cpp(93,11): warning C4018: “<”: 有符号/无符号不匹配
+G:\code\cryptology\大作业\clientA\clientA\源.cpp(97,20): warning C4018: “<”: 有符号/无符号不匹配
 G:\code\cryptology\大作业\clientA\clientA\BigInt.h(26): warning C4715: “Int2Hex”: 不是所有的控件路径都返回值
 G:\code\cryptology\大作业\clientA\clientA\AES.h(106): warning C4715: “Binary2Hex”: 不是所有的控件路径都返回值
 G:\code\cryptology\大作业\clientA\clientA\AES.h(125): warning C4715: “Hex2Binary”: 不是所有的控件路径都返回值
 G:\code\cryptology\大作业\clientA\clientA\AES.h(209): warning C4715: “CharAddb”: 不是所有的控件路径都返回值
-G:\code\cryptology\大作业\clientA\clientA\源.cpp(110): warning C4715: “allocKey”: 不是所有的控件路径都返回值
+G:\code\cryptology\大作业\clientA\clientA\源.cpp(111): warning C4715: “allocKey”: 不是所有的控件路径都返回值
   clientA.vcxproj -> G:\code\cryptology\大作业\clientA\clientA\Debug\clientA.exe

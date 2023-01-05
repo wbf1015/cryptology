@@ -1257,8 +1257,8 @@ string useAESdecrypt(string s) {
 		string keys = OriginKey;
 		cout << s << endl;
 		cout << keys << endl;
-		memset(text, 0, 129);
-		memset(key, 0, 129);
+		/*memset(text, 0, 129);
+		memset(key, 0, 129);*/
 		TestData1 mytd(128, 128,s,keys,s);
 		decrypt(mytd);
 		string ret = GetCstarHex(text, 1, 129);

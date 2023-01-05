@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="AES.h" />
     <ClInclude Include="BigInt.h" />
+    <ClInclude Include="dealFile.h" />
     <ClInclude Include="RSA.h" />
     <ClInclude Include="socket.h" />
   </ItemGroup>
